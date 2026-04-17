@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Training | Master The Weapons</title>
+    <link rel="icon" type="image/png" href="assets/flavicon.png">
+    <style>
+        :root { 
+            --gold: #ffcc00; 
+            --orange: #FF6600; 
+            --bg: #0a0a0a; 
+            --card: #161616; 
+            --text: #eee; 
+        }
+        body { 
+            font-family: 'Arial Narrow', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            background-image: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.88)), url('1.jpg');
+            background-size: cover; 
+            background-attachment: fixed;
+        }
+        nav { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--orange); }
+        nav a { color: white; text-decoration: none; margin: 0 15px; text-transform: uppercase; font-weight: bold; }
+        .container { max-width: 1200px; margin: auto; padding: 20px; }
+        h1 { text-align: center; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 30px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #333; margin-bottom: 25px; }
+        .weakness { background: #330000; border-left: 5px solid #ff4444; padding: 15px; margin: 12px 0; border-radius: 8px; }
+        .drill { background: #002200; border-left: 5px solid var(--gold); padding: 15px; margin: 12px 0; border-radius: 8px; }
+        .btn { background: var(--orange); color: white; padding: 14px 28px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Hub Home</a>
+    <a href="Setup.html">Setup</a>
+    <a href="ScoutingMatrix.html">Scouting Matrix</a>
+    <a href="BettingMatrix.html">Betting Matrix</a>
+    <a href="FighterAssessment.html">Fighter Assessment</a>
+    <a href="CoachAssessment.html">Coach Assessment</a>
+    <a href="EnhancedTraining.html">Enhanced Training</a>
+</nav>
+
+<div class="container">
+    <h1>ENHANCED TRAINING PROGRAM</h1>
+    <p style="text-align:center; color:#aaa;">Targeted Drills Based on Fighter Weaknesses</p>
+
+    <div class="card">
+        <h2 style="color:var(--gold);">Fighter: <span id="fighterName">Fighter A</span></h2>
+        <div id="weaknesses"></div>
+    </div>
+
+    <div class="card">
+        <h2 style="color:var(--gold);">Recommended Drills to Fix Weaknesses</h2>
+        <div id="drills"></div>
+    </div>
+</div>
+
+<script>
+    function loadWeaknesses() {
+        const raw = localStorage.getItem('MOW_AI_Scores');
+        const nameA = localStorage.getItem('MOW_FighterA_Name') || 'Fighter A';
+        document.getElementById('fighterName').textContent = nameA;
+
+        if (!raw) {
+            document.getElementById('weaknesses').innerHTML = "<p style='color:#ff6666;'>No scores loaded. Go to Setup first.</p>";
+            return;
+        }
+
+        const lines = raw.split('\n');
+        let weaknesses = [];
+
+        lines.forEach(line => {
+            if (!line.trim() || line.includes("Weapon")) return;
+            const cols = line.split(/[|,]/).map(c => c.trim());
+            if (cols.length < 4) return;
+
+            const weapon = cols[0].trim();
+            const t = parseFloat(cols[1]) || 0;
+            const a = parseFloat(cols[2]) || 0;
+            const e = parseFloat(cols[3]) || 0;
+            const avg = (t + a + e) / 3;
+
+            if (avg < 6.5) {
+                weaknesses.push({ weapon, avg: avg.toFixed(1), t, a, e });
+            }
+        });
+
+        // Sort by weakest first
+        weaknesses.sort((a,b) => a.avg - b.avg);
+
+        let html = '';
+        weaknesses.forEach(w => {
+            html += `
+                <div class="weakness">
+                    <strong>${w.weapon}</strong> — Avg: ${w.avg}/10 
+                    <span style="color:#ffaaaa;">(T:${w.t} A:${w.a} E:${w.e})</span>
+                </div>`;
+        });
+
+        document.getElementById('weaknesses').innerHTML = html || "<p style='color:#88ff88;'>No major weaknesses detected. Good work!</p>";
+
+        // Generate drills
+        let drillHTML = '<h3 style="color:var(--gold);">Priority Drills:</h3>';
+        weaknesses.forEach(w => {
+            drillHTML += `
+                <div class="drill">
+                    <strong>Fix ${w.weapon} (${w.avg}/10)</strong><br>
+                    • 4x5min shadowboxing with focus on timing<br>
+                    • Partner drill: 8x3min slow-motion reps<br>
+                    • 3 sets of 20 sprawls / guard passes (if grappling weakness)<br>
+                    • Film review + slow-motion analysis
+                </div>`;
+        });
+
+        document.getElementById('drills').innerHTML = drillHTML || "<p style='color:#88ff88;'>All areas strong. Maintain current training.</p>";
+    }
+
+    window.onload = loadWeaknesses;
+</script>
+</body>
+</html>
