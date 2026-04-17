@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fight IQ Scouting Matrix | Master The Weapons</title>
+    <link rel="icon" type="image/png" href="assets/flavicon.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root { 
+            --gold: #ffcc00; 
+            --blue: #00d4ff; 
+            --bg: #0a0a0a; 
+            --card: #161616; 
+            --text: #eee; 
+            --orange: #FF6600; 
+        }
+        body { 
+            font-family: 'Arial Narrow', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            background-image: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.88)), url('1.jpg');
+            background-size: cover; 
+            background-attachment: fixed;
+        }
+        nav { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--orange); }
+        nav a { color: white; text-decoration: none; margin: 0 15px; text-transform: uppercase; font-weight: bold; }
+        .container { max-width: 1400px; margin: auto; padding: 20px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 25px; }
+        .card { background: rgba(22,22,22,0.95); padding: 20px; border-radius: 12px; border: 1px solid #333; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #222; text-align: left; }
+        th { background: #222; color: var(--gold); }
+        input { 
+            width: 52px; 
+            background: #000; 
+            border: 1px solid #555; 
+            color: var(--gold); 
+            text-align: center; 
+            border-radius: 4px; 
+            font-weight: bold; 
+        }
+        
+        .btn { 
+            padding: 16px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-size: 1.05rem; 
+            margin: 10px 5px;
+        }
+        .btn-update { background: var(--orange); color: white; width: 100%; }
+        .btn-load { background: #00cc00; color: white; }
+        .btn-pdf { background: #444; color: white; }
+        
+        .chart-container { height: 460px; position: relative; margin-top: 20px; }
+        #report { 
+            margin-top: 20px; 
+            padding: 20px; 
+            background: #111; 
+            border-left: 5px solid var(--gold); 
+            white-space: pre-line; 
+            line-height: 1.5; 
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Hub Home</a>
+    <a href="Setup.html">Setup</a>
+    <a href="ScoutingMatrix.html">Scouting Matrix</a>
+    <a href="BettingMatrix.html">Betting Matrix</a>
+</nav>
+
+<div class="container">
+    <h1 style="text-align:center; color:var(--gold);">🔥 FIGHT IQ SCOUTING MATRIX</h1>
+
+    <div class="grid">
+        <div class="card">
+            <div style="display:flex; margin-bottom:15px; gap:10px;">
+                <button id="tabA" class="tab active" onclick="setFighter('A')">Fighter A Scores</button>
+                <button id="tabB" class="tab" onclick="setFighter('B')">Fighter B Scores</button>
+            </div>
+            
+            <button class="btn btn-load" onclick="loadAIScores()">📥 Load AI Scores from Setup</button>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Weapon</th>
+                        <th>Timing (T)</th>
+                        <th>Adaptability (A)</th>
+                        <th>Energy (E)</th>
+                        <th>Avg</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+
+            <button class="btn btn-update" onclick="updateChart()">RUN TACTICAL ANALYSIS</button>
+            <button class="btn btn-pdf" onclick="window.print()" style="width:100%;">Export Full Report (PDF)</button>
+        </div>
+
+        <div class="card">
+            <div style="text-align:center; margin-bottom:10px;">
+                <span style="color:var(--gold)">● Fighter A</span> &nbsp;&nbsp;&nbsp; 
+                <span style="color:var(--blue)">● Fighter B</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="mainChart"></canvas>
+            </div>
+            <div id="report">Click "Load AI Scores from Setup" then run analysis.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const weapons = ["Jab/Cross", "Roundhouse", "Teep", "Low Kick", "Elbows", "Knees", "Clinch", "Double Leg", "Single Leg", "Sprawl", "Guard Pass", "Mount/Side", "Armbar", "Triangle", "RNC", "GNP"];
+    let activeFighter = 'A';
+    let scoresA = Array(16).fill().map(() => [0,0,0]);
+    let scoresB = Array(16).fill().map(() => [0,0,0]);
+    let chart;
+
+    const nameMap = {
+        "jab/cross": 0,
+        "roundhouse": 1,
+        "teep": 2,
+        "low kick": 3,
+        "elbows": 4,
+        "knees": 5,
+        "clinch": 6,
+        "double leg": 7,
+        "single leg": 8,
+        "sprawl": 9,
+        "guard pass": 10,
+        "mount/side": 11,
+        "armbar": 12,
+        "triangle": 13,
+        "rnc": 14,
+        "rear naked": 14,
+        "gnp": 15,
+        "ground-and-pound": 15,
+        "ground and pound": 15
+    };
+
+    function buildTable() {
+        const body = document.getElementById('tableBody');
+        const current = activeFighter === 'A' ? scoresA : scoresB;
+        body.innerHTML = weapons.map((weapon, i) => `
+            <tr>
+                <td><strong>${weapon}</strong></td>
+                <td><input type="number" class="sc-t" value="${current[i][0]}" min="0" max="10" onchange="syncInputs()"></td>
+                <td><input type="number" class="sc-a" value="${current[i][1]}" min="0" max="10" onchange="syncInputs()"></td>
+                <td><input type="number" class="sc-e" value="${current[i][2]}" min="0" max="10" onchange="syncInputs()"></td>
+                <td style="font-weight:bold; color:var(--gold);">${((current[i][0]+current[i][1]+current[i][2])/3).toFixed(1)}</td>
+            </tr>
+        `).join('');
+    }
+
+    function setFighter(f) {
+        syncInputs();
+        activeFighter = f;
+        document.getElementById('tabA').classList.toggle('active', f === 'A');
+        document.getElementById('tabB').classList.toggle('active', f === 'B');
+        buildTable();
+    }
+
+    function syncInputs() {
+        const ts = document.querySelectorAll('.sc-t');
+        const as = document.querySelectorAll('.sc-a');
+        const es = document.querySelectorAll('.sc-e');
+        const target = activeFighter === 'A' ? scoresA : scoresB;
+        ts.forEach((el, i) => {
+            target[i] = [
+                parseFloat(el.value) || 0,
+                parseFloat(as[i].value) || 0,
+                parseFloat(es[i].value) || 0
+            ];
+        });
+    }
+
+    function loadAIScores() {
+        const raw = localStorage.getItem('MOW_AI_Scores');
+        if (!raw) {
+            alert("No scores found.\n\nGo to Setup.html → Paste AI scores → Save first.");
+            return;
+        }
+
+        const lines = raw.split('\n');
+        let loaded = 0;
+
+        lines.forEach(line => {
+            line = line.trim();
+            if (!line || line.includes("Weapon") || line.includes("A_T")) return;
+
+            let cols = line.split(',').map(c => c.trim());
+            if (cols.length < 7) cols = line.split('|').map(c => c.trim());
+            if (cols.length < 7) return;
+
+            let weapon = cols[0].toLowerCase().trim();
+
+            let index = nameMap[weapon];
+            if (index === undefined) {
+                if (weapon.includes("jab") || weapon.includes("cross")) index = 0;
+                else if (weapon.includes("roundhouse")) index = 1;
+                else if (weapon.includes("teep")) index = 2;
+                else if (weapon.includes("low kick")) index = 3;
+                else if (weapon.includes("elbow")) index = 4;
+                else if (weapon.includes("knee")) index = 5;
+                else if (weapon.includes("clinch")) index = 6;
+                else if (weapon.includes("double leg")) index = 7;
+                else if (weapon.includes("single leg")) index = 8;
+                else if (weapon.includes("sprawl")) index = 9;
+                else if (weapon.includes("guard pass")) index = 10;
+                else if (weapon.includes("mount") || weapon.includes("side")) index = 11;
+                else if (weapon.includes("armbar")) index = 12;
+                else if (weapon.includes("triangle")) index = 13;
+                else if (weapon.includes("rnc") || weapon.includes("rear naked")) index = 14;
+                else if (weapon.includes("gnp") || weapon.includes("ground")) index = 15;
+            }
+
+            if (index === undefined) return;
+
+            scoresA[index] = [
+                parseFloat(cols[1]) || 0,
+                parseFloat(cols[2]) || 0,
+                parseFloat(cols[3]) || 0
+            ];
+            scoresB[index] = [
+                parseFloat(cols[4]) || 0,
+                parseFloat(cols[5]) || 0,
+                parseFloat(cols[6]) || 0
+            ];
+            loaded++;
+        });
+
+        if (loaded > 0) {
+            buildTable();
+            alert(`✅ Successfully loaded ${loaded} weapons!`);
+        } else {
+            alert("Could not match any weapons.\nMake sure the AI output format is correct.");
+        }
+    }
+
+    function updateChart() {
+        syncInputs();
+        const avgA = scoresA.map(s => (s[0]+s[1]+s[2])/3);
+        const avgB = scoresB.map(s => (s[0]+s[1]+s[2])/3);
+
+        chart.data.datasets[0].data = avgA;
+        chart.data.datasets[1].data = avgB;
+        chart.update();
+
+        const avgScoreA = (avgA.reduce((a,b) => a + b, 0) / 16).toFixed(1);
+        const avgScoreB = (avgB.reduce((a,b) => a + b, 0) / 16).toFixed(1);
+
+        const report = `TACTICAL ANALYSIS COMPLETE\n\nFighter A Overall IQ: ${avgScoreA}/10\nFighter B Overall IQ: ${avgScoreB}/10\n\nReview radar chart for spikes & dips.`;
+        document.getElementById('report').innerText = report;
+    }
+
+    window.onload = () => {
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: weapons,
+                datasets: [
+                    { label: 'Fighter A', data: Array(16).fill(0), borderColor: '#ffcc00', backgroundColor: 'rgba(255,204,0,0.2)', borderWidth: 3 },
+                    { label: 'Fighter B', data: Array(16).fill(0), borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.2)', borderWidth: 3 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { r: { min: 0, max: 10, grid: { color: '#333' }, pointLabels: { color: '#ddd', font: { size: 11 } } }},
+                plugins: { legend: { position: 'top', labels: { color: '#eee' } }}
+            }
+        });
+
+        buildTable();
+    };
+</script>
+</body>
+</html>

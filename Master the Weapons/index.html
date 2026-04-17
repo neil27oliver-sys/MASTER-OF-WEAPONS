@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Of Weapons | Hub</title>
+    <link rel="icon" type="image/png" href="assets/flavicon.png">
+    <style>
+        :root {
+            --primary-orange: #FF6600;
+            --gold: #FFD700;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(20, 20, 20, 0.92);
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial Narrow', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text);
+            background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('assets/Master.png');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            z-index: 100;
+        }
+
+        .logo img {
+            height: 80px;
+        }
+
+        header {
+            text-align: center;
+            padding: 100px 20px 60px;
+            background: rgba(0,0,0,0.4);
+            border-bottom: 3px solid var(--primary-orange);
+        }
+
+        header h1 {
+            font-size: 3.8rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--gold);
+        }
+
+        header p {
+            font-size: 1.3rem;
+            color: #ddd;
+            margin-top: 12px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-12px);
+            border-color: var(--primary-orange);
+            box-shadow: 0 15px 30px rgba(255,102,0,0.2);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 210px;
+            object-fit: scale-down;
+        }
+
+        .card-content {
+            padding: 22px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .card-content h3 {
+            color: var(--primary-orange);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 28px;
+            background: var(--primary-orange);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .promo-banner {
+            grid-column: 1 / -1;
+            background: rgba(255, 102, 0, 0.15);
+            border: 2px dashed var(--gold);
+            padding: 25px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            font-size: 0.95rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo Top Left -->
+    <div class="logo">
+        <img src="assets/monogram.png" alt="Master Of Weapons">
+    </div>
+
+    <header>
+        <h1>MASTER OF WEAPONS</h1>
+        <p>Tactical Fight IQ Intelligence System</p>
+    </header>
+
+    <main class="container">
+        
+        <div class="grid">
+            
+            <div class="card">
+                <div class="card-content">
+                    <h3>Methodology</h3>
+                    <p>Deep dive into the 16 Weapons and the 3 IQ Pillars (Timing • Adaptability • Energy).</p>
+                    <a href="Methodology.html" class="btn">View Logic</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <h3>Technical Setup</h3>
+                    <p>Load fight videos and configure your scouting environment.</p>
+                    <a href="Setup.html" class="btn">Configure System</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="assets/1.jpg" alt="Scouting" class="card-img">
+                <div class="card-content">
+                    <h3>Scouting Matrix</h3>
+                    <p>Tactical data collection and opponent threat identification.</p>
+                    <a href="ScoutingMatrix.html" class="btn">Open Scouting Matrix</a>
+                </div>
+            </div>
+
+            <!-- Paywall Banner -->
+            <<div class="promo-banner">
+    <p><strong>This application includes "Couch to Cage" for free!</strong></p>                              
+    
+    <p>
+        Couch to Cage is the underlying system for Fighter Assessment and Coach Assessment.<br>
+        <strong>Link: <a href="https://ctc-three.vercel.app/" target="_blank" rel="noopener">https://ctc-three.vercel.app/</a></strong>
+    </p>                
+    
+    <a href="#" onclick="alert('PayPal Checkout - $36 (Placeholder)');" 
+       style="color:var(--gold); font-weight:bold; font-size:1.1rem; display:inline-block; margin-top:10px;">
+        🔒 Unlock Full Access - $36 via PayPal
+    </a>
+
+            </div>
+
+            <div class="card">
+                <img src="assets/2.jpg" alt="Betting" class="card-img">
+                <div class="card-content">
+                    <h3>Betting Matrix</h3>
+                    <p>Turn tactical scouting into high-probability betting edges.</p>
+                    <a href="BettingMatrix.html" class="btn">Open Betting Matrix</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="assets/3.jpg" alt="Fighter Assessment" class="card-img">
+                <div class="card-content">
+                    <h3>Fighter Assessment</h3>
+                    <p>Track progression from Foundation to Mastery using the 3 IQ Pillars.</p>
+                    <a href="FighterAssesment.html" class="btn">Open Fighter Assessment</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="assets/4.jpg" alt="Coach Assessment" class="card-img">
+                <div class="card-content">
+                    <h3>Coach Assessment</h3>
+                    <p>Couch to Cage - Full Coach Arsenal Evaluation & Certification Tool.</p>
+                    <a href="CoachAssesment.html" class="btn">Open Coach Assessment</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Neil Oliver | Master Of Weapons System
+    </footer>
+
+</body>
+</html>

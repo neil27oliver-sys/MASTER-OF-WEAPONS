@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup | Master the Weapons</title>
+    <link rel="icon" type="image/png" href="assets/flavicon.png">
+    <style>
+        :root {
+            --primary-orange: #FF6600;
+            --gold: #FFD700;
+            --dark-bg: #0a0a0a;
+            --card-bg: #161616;
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial Narrow', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text);
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('Master.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        nav { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--primary-orange); }
+        nav a { color: white; text-decoration: none; margin: 0 15px; text-transform: uppercase; font-weight: bold; }
+
+        .container { max-width: 1100px; margin: 40px auto; padding: 20px; }
+
+        .setup-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 { text-align: center; color: var(--gold); margin-bottom: 10px; }
+        h2 { color: var(--primary-orange); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+
+        label { display: block; margin: 8px 0 5px; color: #ccc; font-weight: bold; }
+
+        .grok-btn {
+            background: linear-gradient(45deg, #00ccff, #0099cc);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 12px;
+            width: 100%;
+            margin: 25px 0;
+            cursor: pointer;
+        }
+
+        .prompt-box {
+            background: #000;
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 0.95rem;
+            max-height: 280px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn, .clear-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .copy-btn { background: var(--gold); color: black; }
+        .clear-btn { background: #cc0000; color: white; }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            background: #111;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="Setup.html">Setup</a>
+    <a href="ScoutingMatrix.html">Scouting Matrix</a>
+</nav>
+
+<div class="container">
+    <h1>🔥 MASTER THE WEAPONS - SETUP</h1>
+    <p style="text-align:center; color:#aaa;">Load videos → Generate Enhanced Prompt → Paste AI Scores</p>
+
+    <!-- Fighter A -->
+    <div class="setup-card">
+        <h2>FIGHTER A</h2>
+        <input type="text" id="fA_name" placeholder="Fighter A Name (e.g. Dricus Du Plessis)">
+        <label>Video 1 (Best / Recent)</label>
+        <input type="text" id="fA_video1" placeholder="YouTube or direct link">
+        <label>Video 2 (Different Style)</label>
+        <input type="text" id="fA_video2" placeholder="YouTube or direct link">
+    </div>
+
+    <!-- Fighter B -->
+    <div class="setup-card">
+        <h2>FIGHTER B</h2>
+        <input type="text" id="fB_name" placeholder="Fighter B Name (e.g. Khamzat Chimaev)">
+        <label>Video 1 (Best / Recent)</label>
+        <input type="text" id="fB_video1" placeholder="YouTube or direct link">
+        <label>Video 2 (Different Style)</label>
+        <input type="text" id="fB_video2" placeholder="YouTube or direct link">
+    </div>
+
+    <button class="grok-btn" onclick="generatePrompt()">
+        🔄 GENERATE ENHANCED PROMPT FOR AI
+    </button>
+
+    <div class="setup-card">
+        <h2>AI PROMPT (Copy to Grok / Claude / ChatGPT)</h2>
+        <div class="prompt-box" id="promptDisplay">Fill details and click Generate Prompt...</div>
+        <button class="copy-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
+        <button class="clear-btn" onclick="clearAll()">🗑️ Clear All</button>
+    </div>
+
+    <div class="setup-card">
+        <h2>PASTE AI SCORES HERE</h2>
+        <textarea id="aiScores" placeholder="Paste the full AI scores table here..."></textarea>
+        <button class="copy-btn" onclick="saveScores()" style="background:#00cc00;">💾 Save Scores to App</button>
+    </div>
+
+    <a href="ScoutingMatrix.html" style="background:var(--gold); color:black; display:block; text-align:center; padding:20px; border-radius:12px; font-size:1.4rem; margin-top:20px; text-decoration:none;">
+        → OPEN SCOUTING MATRIX
+    </a>
+</div>
+
+<script>
+    function formatVideoLink(url) {
+        if (!url) return '';
+        if (url.includes('youtu.be/')) return url.replace('youtu.be/', 'www.youtube.com/embed/').split('?')[0];
+        if (url.includes('watch?v=')) return url.replace('watch?v=', 'embed/').split('&')[0];
+        return url;
+    }
+
+    function saveSettings() {
+        localStorage.setItem('MOW_FighterA_Name', document.getElementById('fA_name').value.trim());
+        localStorage.setItem('MOW_FighterA_Video1', formatVideoLink(document.getElementById('fA_video1').value.trim()));
+        localStorage.setItem('MOW_FighterA_Video2', formatVideoLink(document.getElementById('fA_video2').value.trim()));
+        localStorage.setItem('MOW_FighterB_Name', document.getElementById('fB_name').value.trim());
+        localStorage.setItem('MOW_FighterB_Video1', formatVideoLink(document.getElementById('fB_video1').value.trim()));
+        localStorage.setItem('MOW_FighterB_Video2', formatVideoLink(document.getElementById('fB_video2').value.trim()));
+    }
+
+    function generatePrompt() {
+        saveSettings();
+
+        const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
+        const nameB = document.getElementById('fB_name').value.trim() || 'Fighter B';
+
+        const vA1 = document.getElementById('fA_video1').value.trim();
+        const vA2 = document.getElementById('fA_video2').value.trim();
+        const vB1 = document.getElementById('fB_video1').value.trim();
+        const vB2 = document.getElementById('fB_video2').value.trim();
+
+        const prompt = `You are a world-class MMA Fight IQ Analyst using the "Master the Weapons" system.
+
+Analyze the fighter(s) using the 3 IQ Pillars (Timing, Adaptability, Energy Management) across all weapons.
+
+**Fighter A:** ${nameA}
+Video 1: ${vA1 || 'None'}
+Video 2: ${vA2 || 'None'}
+
+**Fighter B:** ${nameB}
+Video 1: ${vB1 || 'None'}
+Video 2: ${vB2 || 'None'}
+
+Return ONLY the scores in this exact CSV-style table format (no extra text):
+
+Weapon,A_T,A_A,A_E,B_T,B_A,B_E
+Jab/Cross,X,X,X,X,X,X
+Roundhouse Kick,X,X,X,X,X,X
+Teep (Push Kick),X,X,X,X,X,X
+Low Kick,X,X,X,X,X,X
+Elbow Strike,X,X,X,X,X,X
+Knee Strike,X,X,X,X,X,X
+Clinching,X,X,X,X,X,X
+Double Leg Takedown,X,X,X,X,X,X
+Single Leg Takedown,X,X,X,X,X,X
+Sprawl (Defense),X,X,X,X,X,X
+Guard Pass,X,X,X,X,X,X
+Mount Control,X,X,X,X,X,X
+Armbar from Guard,X,X,X,X,X,X
+Triangle Choke,X,X,X,X,X,X
+Rear Naked Choke,X,X,X,X,X,X
+Ground-and-Pound,X,X,X,X,X,X
+
+Be precise with numbers (1-10).`;
+
+        document.getElementById('promptDisplay').textContent = prompt;
+    }
+
+    function copyPrompt() {
+        const text = document.getElementById('promptDisplay').textContent;
+        navigator.clipboard.writeText(text);
+        alert("✅ Prompt copied to clipboard!");
+    }
+
+    function saveScores() {
+        const scores = document.getElementById('aiScores').value.trim();
+        if (scores) {
+            localStorage.setItem('MOW_AI_Scores', scores);
+            alert("✅ Scores saved! You can now load them in Scouting Matrix and other modules.");
+        } else {
+            alert("Please paste the AI scores first.");
+        }
+    }
+
+    function clearAll() {
+        if (confirm("Clear all data?")) {
+            document.getElementById('fA_name').value = '';
+            document.getElementById('fA_video1').value = '';
+            document.getElementById('fA_video2').value = '';
+            document.getElementById('fB_name').value = '';
+            document.getElementById('fB_video1').value = '';
+            document.getElementById('fB_video2').value = '';
+            document.getElementById('aiScores').value = '';
+            document.getElementById('promptDisplay').textContent = 'Fill details and click Generate Prompt...';
+            localStorage.removeItem('MOW_AI_Scores');
+            alert("✅ All data cleared.");
+        }
+    }
+
+    window.onload = () => {
+        document.getElementById('fA_name').value = localStorage.getItem('MOW_FighterA_Name') || '';
+        document.getElementById('fA_video1').value = localStorage.getItem('MOW_FighterA_Video1') || '';
+        document.getElementById('fA_video2').value = localStorage.getItem('MOW_FighterA_Video2') || '';
+        document.getElementById('fB_name').value = localStorage.getItem('MOW_FighterB_Name') || '';
+        document.getElementById('fB_video1').value = localStorage.getItem('MOW_FighterB_Video1') || '';
+        document.getElementById('fB_video2').value = localStorage.getItem('MOW_FighterB_Video2') || '';
+    };
+</script>
+</body>
+</html>

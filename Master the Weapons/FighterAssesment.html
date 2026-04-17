@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fighter Assessment Matrix | Master The Weapons</title>
+    <link rel="icon" type="image/png" href="assets/flavicon.png">
+    <style>
+        :root { 
+            --gold: #ffcc00; 
+            --orange: #FF6600; 
+            --bg: #0a0a0a; 
+            --card: #161616; 
+            --text: #eee; 
+        }
+        body { 
+            font-family: 'Arial Narrow', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            background-image: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.88)), url('1.jpg');
+            background-size: cover; 
+            background-attachment: fixed;
+        }
+        nav { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--orange); }
+        nav a { color: white; text-decoration: none; margin: 0 15px; text-transform: uppercase; font-weight: bold; }
+        .container { max-width: 1200px; margin: auto; padding: 20px; }
+        h1 { text-align: center; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 25px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #333; }
+        .section-header { background: #222; color: var(--gold); padding: 10px; font-weight: bold; margin: 15px 0 10px; border-radius: 6px; border-left: 4px solid var(--orange); }
+        .w-row { margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #222; display: flex; align-items: center; justify-content: space-between; }
+        .w-label { font-weight: bold; color: #ddd; flex: 1; }
+        .input-group input { width: 50px; background: #000; border: 1px solid var(--gold); color: white; text-align: center; padding: 6px; border-radius: 4px; margin-left: 6px; }
+        .bar-container { background: #000; height: 16px; border-radius: 8px; margin: 12px 0; overflow: hidden; border: 1px solid #444; }
+        .bar-fill { background: linear-gradient(to right, var(--gold), #ff8800); height: 100%; width: 0%; transition: width 1s ease; }
+        .footer-action { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(10,10,10,0.98); border-top: 2px solid var(--orange); padding: 18px 0; z-index: 100; text-align: center; }
+        .btn-calc { background: var(--gold); color: black; padding: 18px 50px; font-size: 1.3rem; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; }
+        .btn-load { background: #00cc00; color: white; padding: 10px 20px; border: none; border-radius: 6px; margin-bottom: 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Hub Home</a>
+    <a href="Setup.html">Setup</a>
+    <a href="ScoutingMatrix.html">Scouting Matrix</a>
+    <a href="BettingMatrix.html">Betting Matrix</a>
+    <a href="FighterAssesment.html">Fighter Assessment</a>
+    <a href="CoachAssesment.html">Coach Assessment</a>
+</nav>
+
+<div class="container">
+    <h1>FIGHTER ASSESSMENT MATRIX</h1>
+
+    <div class="grid">
+        <div class="card">
+            <button class="btn-load" onclick="loadFighterAScores()">📥 Load Fighter A Scores from Setup</button>
+            <h3>Arsenal Scoring</h3>
+            <div class="weapon-scroll" id="inputArea">
+                <div class="section-header">MUAY THAI - EIGHT LIMBS</div>
+                <div class="w-row"><span class="w-label">Jab/Cross</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Roundhouse Kick</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Teep (Push Kick)</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Low Kick</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Elbow Strike</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Knee Strike</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Clinch Work</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+
+                <div class="section-header">WRESTLING - THE BRIDGE</div>
+                <div class="w-row"><span class="w-label">Double Leg</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Single Leg</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Sprawl (Defense)</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Guard Passing</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+
+                <div class="section-header">BJJ - GROUND DOMINANCE</div>
+                <div class="w-row"><span class="w-label">Mount/Side Control</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Armbar</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Triangle</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Rear Naked Choke</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Ground & Pound</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Discipline Power Levels</h3>
+            <div id="visuals">
+                <div class="label-group"><span>MUAY THAI</span><span id="v-mt">0%</span></div>
+                <div class="bar-container"><div class="bar-fill" id="bar-mt"></div></div>
+                <div class="label-group"><span>WRESTLING</span><span id="v-wr">0%</span></div>
+                <div class="bar-container"><div class="bar-fill" id="bar-wr"></div></div>
+                <div class="label-group"><span>BJJ / GROUND</span><span id="v-bjj">0%</span></div>
+                <div class="bar-container"><div class="bar-fill" id="bar-bjj"></div></div>
+            </div>
+
+            <h3>Recommended Training Regime</h3>
+            <div id="regimeDisplay" style="background:#050505; padding:20px; border-left:5px solid var(--gold); min-height:180px;">
+                Load scores and click Analyze to generate your plan...
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer-action">
+    <button class="btn-calc" onclick="runEvolution()">ANALYZE & GENERATE REGIME</button>
+</div>
+
+<script>
+    function loadFighterAScores() {
+        const raw = localStorage.getItem('MOW_AI_Scores');
+        if (!raw) {
+            alert("No scores found.\nGo to Setup.html first.");
+            return;
+        }
+
+        const lines = raw.split('\n');
+        let loaded = 0;
+
+        lines.forEach(line => {
+            if (!line.trim()) return;
+            const cols = line.split(/[|,]/).map(c => c.trim());
+            if (cols.length < 4) return;
+
+            let weapon = cols[0].toLowerCase().trim();
+            const t = parseFloat(cols[1]) || 0;
+            const a = parseFloat(cols[2]) || 0;
+            const e = parseFloat(cols[3]) || 0;
+
+            document.querySelectorAll('.w-row').forEach(row => {
+                const labelText = row.querySelector('.w-label').textContent.toLowerCase();
+
+                // Very flexible matching
+                if (labelText.includes(weapon) || weapon.includes(labelText) || 
+                    (weapon.includes("clinch") && labelText.includes("clinch")) ||
+                    (weapon.includes("mount") && labelText.includes("mount")) ||
+                    (weapon.includes("side") && labelText.includes("side")) ||
+                    (weapon.includes("ground") && labelText.includes("ground"))) {
+                    
+                    const inputs = row.querySelectorAll('input');
+                    if (inputs.length === 3) {
+                        inputs[0].value = t;
+                        inputs[1].value = a;
+                        inputs[2].value = e;
+                        loaded++;
+                    }
+                }
+            });
+        });
+
+        if (loaded > 0) {
+            alert(`✅ Loaded ${loaded} techniques from your video scores!`);
+        } else {
+            alert("No matches found.\nMake sure scores are saved in Setup.html.");
+        }
+    }
+
+    function runEvolution() {
+        const rows = document.querySelectorAll('.w-row');
+        let mtSum = 0, mtCount = 0, wrSum = 0, wrCount = 0, bjjSum = 0, bjjCount = 0, totalSum = 0;
+
+        rows.forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            const t = parseFloat(inputs[0].value) || 0;
+            const a = parseFloat(inputs[1].value) || 0;
+            const e = parseFloat(inputs[2].value) || 0;
+            const avg = (t + a + e) / 3;
+
+            const label = row.querySelector('.w-label').textContent.toLowerCase();
+
+            if (label.includes("jab") || label.includes("roundhouse") || label.includes("teep") || label.includes("kick") || label.includes("elbow") || label.includes("knee") || label.includes("clinch")) {
+                mtSum += avg; mtCount++;
+            } else if (label.includes("leg") || label.includes("sprawl") || label.includes("guard")) {
+                wrSum += avg; wrCount++;
+            } else {
+                bjjSum += avg; bjjCount++;
+            }
+            totalSum += avg;
+        });
+
+        document.getElementById('bar-mt').style.width = mtCount ? ((mtSum / mtCount) * 10) + "%" : "0%";
+        document.getElementById('v-mt').innerText = mtCount ? ((mtSum / mtCount) * 10).toFixed(0) + "%" : "0%";
+        
+        document.getElementById('bar-wr').style.width = wrCount ? ((wrSum / wrCount) * 10) + "%" : "0%";
+        document.getElementById('v-wr').innerText = wrCount ? ((wrSum / wrCount) * 10).toFixed(0) + "%" : "0%";
+        
+        document.getElementById('bar-bjj').style.width = bjjCount ? ((bjjSum / bjjCount) * 10) + "%" : "0%";
+        document.getElementById('v-bjj').innerText = bjjCount ? ((bjjSum / bjjCount) * 10).toFixed(0) + "%" : "0%";
+
+        const overall = rows.length ? (totalSum / rows.length).toFixed(1) : "0.0";
+        let regime = `OVERALL FIGHTER IQ: ${overall}/10\n\n`;
+
+        if (overall < 6.5) regime += "PHASE 1 - FOUNDATION\nFocus on basic technique and conditioning.";
+        else if (overall < 8.0) regime += "PHASE 2 - SKILL DEVELOPMENT\nFocus on timing and adaptability drills.";
+        else regime += "PHASE 3 - MASTERY\nFocus on live integration and high-pressure sparring.";
+
+        document.getElementById('regimeDisplay').innerText = regime;
+    }
+
+    window.onload = () => {};
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
