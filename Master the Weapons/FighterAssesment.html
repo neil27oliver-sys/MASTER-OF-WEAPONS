@@ -74,6 +74,7 @@
 
                 <div class="section-header">BJJ - GROUND DOMINANCE</div>
                 <div class="w-row"><span class="w-label">Mount/Side Control</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
+                <div class="w-row"><span class="w-label">Side Control</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
                 <div class="w-row"><span class="w-label">Armbar</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
                 <div class="w-row"><span class="w-label">Triangle</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
                 <div class="w-row"><span class="w-label">Rear Naked Choke</span><div class="input-group"><input type="number" class="t" value="0"><input type="number" class="a" value="0"><input type="number" class="e" value="0"></div></div>
@@ -128,10 +129,10 @@
             document.querySelectorAll('.w-row').forEach(row => {
                 const labelText = row.querySelector('.w-label').textContent.toLowerCase();
 
-                // Very flexible matching
                 if (labelText.includes(weapon) || weapon.includes(labelText) || 
                     (weapon.includes("clinch") && labelText.includes("clinch")) ||
                     (weapon.includes("mount") && labelText.includes("mount")) ||
+                    (weapon.includes("side control") && labelText.includes("side")) ||
                     (weapon.includes("side") && labelText.includes("side")) ||
                     (weapon.includes("ground") && labelText.includes("ground"))) {
                     
@@ -168,7 +169,7 @@
 
             if (label.includes("jab") || label.includes("roundhouse") || label.includes("teep") || label.includes("kick") || label.includes("elbow") || label.includes("knee") || label.includes("clinch")) {
                 mtSum += avg; mtCount++;
-            } else if (label.includes("leg") || label.includes("sprawl") || label.includes("guard")) {
+            } else if (label.includes("leg") || label.includes("sprawl") || label.includes("guard") || label.includes("double") || label.includes("single")) {
                 wrSum += avg; wrCount++;
             } else {
                 bjjSum += avg; bjjCount++;
