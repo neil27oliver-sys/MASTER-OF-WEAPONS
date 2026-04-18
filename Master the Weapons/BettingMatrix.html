@@ -57,8 +57,8 @@
     <a href="Setup.html">Setup</a>
     <a href="ScoutingMatrix.html">Scouting Matrix</a>
     <a href="BettingMatrix.html">Betting Matrix</a>
-    <a href="FighterAssesment.html">Fighter Assesment</a>
-    <a href="CoachAssesment.html">Coach Assesment</a>
+    <a href="FighterAssesment.html">Fighter Assessment</a>
+    <a href="CoachAssesment.html">Coach Assessment</a>
 </nav>
 
 <div class="container">
@@ -73,10 +73,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td><span class="m-name">Moneyline</span></td><td>Best when one fighter has clear spikes hitting opponent’s dips.</td></tr>
-                <tr><td><span class="m-name">Method of Victory</span></td><td>Wrestling spike vs weak Sprawl = high Submission/TKO probability.</td></tr>
-                <tr><td><span class="m-name">Total Rounds (O/U)</span></td><td>Under for smothering wrestlers, Over for high Energy IQ fights.</td></tr>
-                <tr><td><span class="m-name">Round Betting / Props</span></td><td>High value when Tactical IQ shows early dominance.</td></tr>
+                <tr><td><span class="m-name">Moneyline</span></td><td>Clear advantage when one fighter has dominant spikes vs opponent weaknesses.</td></tr>
+                <tr><td><span class="m-name">Method of Victory</span></td><td>Wrestling + Side Control spike vs poor Sprawl/Mount = high finish probability.</td></tr>
+                <tr><td><span class="m-name">Total Rounds (O/U)</span></td><td>Under for smothering wrestlers, Over for high Energy IQ technical fights.</td></tr>
+                <tr><td><span class="m-name">Props / Round Betting</span></td><td>High value on early dominance or late fight management.</td></tr>
             </tbody>
         </table>
     </div>
@@ -93,10 +93,11 @@
         const nameB = localStorage.getItem('MOW_FighterB_Name') || 'Fighter B';
         const raw = localStorage.getItem('MOW_AI_Scores');
 
-        let aAvg = 7.0;
-        let bAvg = 7.0;
+        let aAvg = 6.5;
+        let bAvg = 6.5;
         let sprawlA = 6.0;
-        let wrestlingB = 8.0;
+        let sideControlA = 6.0;
+        let wrestlingB = 7.5;
 
         if (raw) {
             const lines = raw.split('\n');
@@ -115,6 +116,7 @@
                 count++;
 
                 if (weapon.includes("sprawl")) sprawlA = aScore;
+                if (weapon.includes("side control") || weapon.includes("mount")) sideControlA = aScore;
                 if (weapon.includes("double leg") || weapon.includes("single leg") || weapon.includes("wrestling")) wrestlingB = bScore;
             });
 
@@ -124,18 +126,20 @@
             }
         }
 
+        const wrestlingEdge = (wrestlingB - sprawlA) > 2.0 || (wrestlingB - sideControlA) > 2.0;
+
         let html = `
-            <p><span class="tag">SIGNAL</span> <span class="status-win">${parseFloat(bAvg) > parseFloat(aAvg) ? nameB : nameA} FAVORED</span></p>
+            <p><span class="tag">SIGNAL</span> <span class="status-win">${parseFloat(bAvg) > parseFloat(aAvg) + 0.4 ? nameB : nameA} FAVORED</span></p>
             <p><strong>${nameA}:</strong> ${aAvg} | <strong>${nameB}:</strong> ${bAvg}</p>
-            <p><strong>Key Edge:</strong> ${parseFloat(wrestlingB) > parseFloat(sprawlA) + 1.5 ? 
-                nameB + "'s wrestling dominance vs " + nameA + "'s Sprawl weakness" : 
-                "Close technical matchup"}</p>
+            <p><strong>Key Tactical Edge:</strong> ${wrestlingEdge ? 
+                nameB + " has strong wrestling advantage vs " + nameA + "'s weak Sprawl/Side Control" : 
+                "Balanced technical matchup"}</p>
             
-            <strong>Recommended Bets:</strong><br>
-            • Moneyline: ${parseFloat(bAvg) > parseFloat(aAvg) ? nameB : nameA}<br>
-            • Method of Victory: ${parseFloat(bAvg) > parseFloat(aAvg) ? nameB + " by Decision or Ground & Pound" : nameA + " by Decision or Submission"}<br>
-            • Total Rounds: ${parseFloat(bAvg) > parseFloat(aAvg) + 0.8 ? "Over 2.5" : "Over 3.5"}<br>
-            • Prop: Fight goes the distance (safer play)
+            <strong>Recommended Plays:</strong><br>
+            • Moneyline: ${parseFloat(bAvg) > parseFloat(aAvg) + 0.3 ? nameB : nameA}<br>
+            • Method of Victory: ${wrestlingEdge ? nameB + " by Decision or Ground Control" : nameA + " by Decision or Submission"}<br>
+            • Total Rounds: ${parseFloat(bAvg) > parseFloat(aAvg) + 0.6 ? "Over 3.5" : "Under 2.5"}<br>
+            • Best Prop: Fight Goes The Distance (safer value)
         `;
 
         document.getElementById('adviceContent').innerHTML = html;
