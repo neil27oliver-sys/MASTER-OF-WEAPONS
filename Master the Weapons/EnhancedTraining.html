@@ -84,12 +84,11 @@
             const e = parseFloat(cols[3]) || 0;
             const avg = (t + a + e) / 3;
 
-            if (avg < 6.5) {
+            if (avg < 6.8) {   // Slightly higher threshold to catch more areas
                 weaknesses.push({ weapon, avg: avg.toFixed(1), t, a, e });
             }
         });
 
-        // Sort by weakest first
         weaknesses.sort((a,b) => a.avg - b.avg);
 
         let html = '';
@@ -101,22 +100,30 @@
                 </div>`;
         });
 
-        document.getElementById('weaknesses').innerHTML = html || "<p style='color:#88ff88;'>No major weaknesses detected. Good work!</p>";
+        document.getElementById('weaknesses').innerHTML = html || "<p style='color:#88ff88;'>No major weaknesses detected. Excellent balance!</p>";
 
-        // Generate drills
-        let drillHTML = '<h3 style="color:var(--gold);">Priority Drills:</h3>';
+        // Smart drill generation
+        let drillHTML = '<h3 style="color:var(--gold);">Priority Targeted Drills:</h3>';
         weaknesses.forEach(w => {
+            let specificDrill = '';
+            if (w.weapon.toLowerCase().includes("side") || w.weapon.toLowerCase().includes("mount") || w.weapon.toLowerCase().includes("guard")) {
+                specificDrill = "• Heavy focus on positional sparring and guard retention drills<br>• 6x5min Side Control escapes + retention";
+            } else if (w.weapon.toLowerCase().includes("sprawl") || w.weapon.toLowerCase().includes("leg")) {
+                specificDrill = "• Sprawl + immediate shot drill (10x per round)<br>• Wrestling chain drills with partner";
+            } else {
+                specificDrill = "• 4x5min shadowboxing with perfect timing focus<br>• Partner slow-motion + full-speed reps";
+            }
+
             drillHTML += `
                 <div class="drill">
                     <strong>Fix ${w.weapon} (${w.avg}/10)</strong><br>
-                    • 4x5min shadowboxing with focus on timing<br>
-                    • Partner drill: 8x3min slow-motion reps<br>
-                    • 3 sets of 20 sprawls / guard passes (if grappling weakness)<br>
-                    • Film review + slow-motion analysis
+                    ${specificDrill}<br>
+                    • Film your sessions and compare to elite examples<br>
+                    • Track weekly improvement in this weapon
                 </div>`;
         });
 
-        document.getElementById('drills').innerHTML = drillHTML || "<p style='color:#88ff88;'>All areas strong. Maintain current training.</p>";
+        document.getElementById('drills').innerHTML = drillHTML || "<p style='color:#88ff88;'>All areas strong. Maintain and sharpen current training.</p>";
     }
 
     window.onload = loadWeaknesses;
