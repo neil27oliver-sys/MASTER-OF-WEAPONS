@@ -120,12 +120,19 @@
 </div>
 
 <script>
-    const weapons = ["Jab/Cross", "Roundhouse", "Teep", "Low Kick", "Elbows", "Knees", "Clinch", "Double Leg", "Single Leg", "Sprawl", "Guard Pass", "Mount/Side", "Armbar", "Triangle", "RNC", "GNP"];
+    // Updated weapons list with Side Control
+    const weapons = [
+        "Jab/Cross", "Roundhouse", "Teep", "Low Kick", "Elbows", "Knees", 
+        "Clinch", "Double Leg", "Single Leg", "Sprawl", "Guard Pass", 
+        "Mount/Side", "Side Control", "Armbar", "Triangle", "RNC", "GNP"
+    ];
+
     let activeFighter = 'A';
-    let scoresA = Array(16).fill().map(() => [0,0,0]);
-    let scoresB = Array(16).fill().map(() => [0,0,0]);
+    let scoresA = Array(17).fill().map(() => [0,0,0]);
+    let scoresB = Array(17).fill().map(() => [0,0,0]);
     let chart;
 
+    // Updated nameMap with Side Control
     const nameMap = {
         "jab/cross": 0,
         "roundhouse": 1,
@@ -139,13 +146,16 @@
         "sprawl": 9,
         "guard pass": 10,
         "mount/side": 11,
-        "armbar": 12,
-        "triangle": 13,
-        "rnc": 14,
-        "rear naked": 14,
-        "gnp": 15,
-        "ground-and-pound": 15,
-        "ground and pound": 15
+        "mount control": 11,
+        "side control": 12,
+        "side": 12,
+        "armbar": 13,
+        "triangle": 14,
+        "rnc": 15,
+        "rear naked": 15,
+        "gnp": 16,
+        "ground-and-pound": 16,
+        "ground and pound": 16
     };
 
     function buildTable() {
@@ -218,10 +228,11 @@
                 else if (weapon.includes("sprawl")) index = 9;
                 else if (weapon.includes("guard pass")) index = 10;
                 else if (weapon.includes("mount") || weapon.includes("side")) index = 11;
-                else if (weapon.includes("armbar")) index = 12;
-                else if (weapon.includes("triangle")) index = 13;
-                else if (weapon.includes("rnc") || weapon.includes("rear naked")) index = 14;
-                else if (weapon.includes("gnp") || weapon.includes("ground")) index = 15;
+                else if (weapon.includes("side control") || weapon.includes("side")) index = 12;
+                else if (weapon.includes("armbar")) index = 13;
+                else if (weapon.includes("triangle")) index = 14;
+                else if (weapon.includes("rnc") || weapon.includes("rear naked")) index = 15;
+                else if (weapon.includes("gnp") || weapon.includes("ground")) index = 16;
             }
 
             if (index === undefined) return;
@@ -256,8 +267,8 @@
         chart.data.datasets[1].data = avgB;
         chart.update();
 
-        const avgScoreA = (avgA.reduce((a,b) => a + b, 0) / 16).toFixed(1);
-        const avgScoreB = (avgB.reduce((a,b) => a + b, 0) / 16).toFixed(1);
+        const avgScoreA = (avgA.reduce((a,b) => a + b, 0) / 17).toFixed(1);
+        const avgScoreB = (avgB.reduce((a,b) => a + b, 0) / 17).toFixed(1);
 
         const report = `TACTICAL ANALYSIS COMPLETE\n\nFighter A Overall IQ: ${avgScoreA}/10\nFighter B Overall IQ: ${avgScoreB}/10\n\nReview radar chart for spikes & dips.`;
         document.getElementById('report').innerText = report;
@@ -270,8 +281,8 @@
             data: {
                 labels: weapons,
                 datasets: [
-                    { label: 'Fighter A', data: Array(16).fill(0), borderColor: '#ffcc00', backgroundColor: 'rgba(255,204,0,0.2)', borderWidth: 3 },
-                    { label: 'Fighter B', data: Array(16).fill(0), borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.2)', borderWidth: 3 }
+                    { label: 'Fighter A', data: Array(17).fill(0), borderColor: '#ffcc00', backgroundColor: 'rgba(255,204,0,0.2)', borderWidth: 3 },
+                    { label: 'Fighter B', data: Array(17).fill(0), borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.2)', borderWidth: 3 }
                 ]
             },
             options: {
