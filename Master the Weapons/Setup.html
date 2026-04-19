@@ -63,9 +63,11 @@
             font-weight: bold;
             border-radius: 12px;
             width: 100%;
-            margin: 25px 0;
+            margin: 20px 0 15px 0;
             cursor: pointer;
         }
+
+        .xf-btn { background: linear-gradient(45deg, #ff8800, #cc6600); }
 
         .prompt-box {
             background: #000;
@@ -73,12 +75,12 @@
             border-radius: 10px;
             padding: 15px;
             font-size: 0.95rem;
-            max-height: 320px;
+            max-height: 380px;
             overflow-y: auto;
             white-space: pre-wrap;
         }
 
-        .copy-btn, .clear-btn {
+        .copy-btn, .clear-btn, .save-btn {
             padding: 12px 20px;
             border: none;
             border-radius: 6px;
@@ -88,16 +90,9 @@
         }
         .copy-btn { background: var(--gold); color: black; }
         .clear-btn { background: #cc0000; color: white; }
+        .save-btn { background: #00cc00; color: white; }
 
-        textarea {
-            width: 100%;
-            height: 160px;
-            background: #111;
-            color: #fff;
-            border: 1px solid #555;
-            border-radius: 8px;
-            padding: 12px;
-        }
+        textarea { width: 100%; height: 140px; background: #111; color: #fff; border: 1px solid #555; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -111,112 +106,101 @@
 
 <div class="container">
     <h1>🔥 MASTER THE WEAPONS - SETUP</h1>
-    <p style="text-align:center; color:#aaa;">Load videos → Generate Enhanced Prompt → Paste AI Scores</p>
+    <p style="text-align:center; color:#aaa;">Load videos → Generate Adaptive Prompt → Paste Scores</p>
 
-    <!-- Fighter A -->
     <div class="setup-card">
-        <h2>FIGHTER A</h2>
-        <input type="text" id="fA_name" placeholder="Fighter A Name (e.g. Dricus Du Plessis)">
-        <label>Video 1 (Best / Recent)</label>
+        <h2>FIGHTER A (Required)</h2>
+        <input type="text" id="fA_name" placeholder="Fighter A Name (or Your Name)">
+        <label>Video 1 - Most Recent / Best Performance</label>
         <input type="text" id="fA_video1" placeholder="YouTube or direct link">
-        <label>Video 2 (Different Style)</label>
-        <input type="text" id="fA_video2" placeholder="YouTube or direct link">
+        <label>Video 2 - Different Style / Older Fight (Optional)</label>
+        <input type="text" id="fA_video2" placeholder="YouTube or direct link (optional)">
     </div>
 
-    <!-- Fighter B -->
     <div class="setup-card">
-        <h2>FIGHTER B</h2>
-        <input type="text" id="fB_name" placeholder="Fighter B Name (e.g. Khamzat Chimaev)">
-        <label>Video 1 (Best / Recent)</label>
-        <input type="text" id="fB_video1" placeholder="YouTube or direct link">
-        <label>Video 2 (Different Style)</label>
-        <input type="text" id="fB_video2" placeholder="YouTube or direct link">
+        <h2>FIGHTER B (Optional - Leave blank for Self-Assessment Mode)</h2>
+        <input type="text" id="fB_name" placeholder="Fighter B Name (leave empty for single fighter mode)">
+        <label>Video 1 - Most Recent / Best Performance (Optional)</label>
+        <input type="text" id="fB_video1" placeholder="YouTube or direct link (optional)">
+        <label>Video 2 - Different Style (Optional)</label>
+        <input type="text" id="fB_video2" placeholder="YouTube or direct link (optional)">
     </div>
 
-    <button class="grok-btn" onclick="generatePrompt()">
-        🔄 GENERATE ENHANCED PROMPT FOR AI
-    </button>
+    <button class="grok-btn" onclick="generateWeaponsPrompt()">🔄 GENERATE WEAPONS PROMPT</button>
+    <button class="grok-btn xf-btn" onclick="generateXFactorPrompt()">🧠 GENERATE X-FACTOR PROMPT</button>
 
     <div class="setup-card">
-        <h2>AI PROMPT (Copy to Grok / Gemini / Claude / ChatGPT)</h2>
-        <div class="prompt-box" id="promptDisplay">Fill details and click Generate Prompt...</div>
+        <h2>AI PROMPT OUTPUT</h2>
+        <div class="prompt-box" id="promptDisplay">Fill details above and click Generate...</div>
         <button class="copy-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
-        <button class="clear-btn" onclick="clearAll()">🗑️ Clear All</button>
+        <button class="clear-btn" onclick="clearAll()">🗑️ Clear All Data</button>
     </div>
 
     <div class="setup-card">
-        <h2>PASTE AI SCORES HERE</h2>
-        <textarea id="aiScores" placeholder="Paste the full AI scores table here..."></textarea>
-        <button class="copy-btn" onclick="saveScores()" style="background:#00cc00;">💾 Save Scores to App</button>
+        <h2>PASTE WEAPONS SCORES HERE</h2>
+        <textarea id="aiScores" placeholder="Paste Weapons scores here..."></textarea>
+        <button class="save-btn" onclick="saveWeaponsScores()">💾 Save Weapons Scores</button>
     </div>
 
-    <a href="ScoutingMatrix.html" style="background:var(--gold); color:black; display:block; text-align:center; padding:20px; border-radius:12px; font-size:1.4rem; margin-top:20px; text-decoration:none;">
-        → OPEN SCOUTING MATRIX
-    </a>
+    <div class="setup-card">
+        <h2>PASTE X-FACTOR SCORES HERE</h2>
+        <textarea id="xfScores" placeholder="Paste X-Factor scores here..."></textarea>
+        <button class="save-btn" onclick="saveXFactorScores()">💾 Save X-Factor Scores</button>
+    </div>
 </div>
 
 <script>
-    function formatVideoLink(url) {
-        if (!url) return '';
-        if (url.includes('youtu.be/')) return url.replace('youtu.be/', 'www.youtube.com/embed/').split('?')[0];
-        if (url.includes('watch?v=')) return url.replace('watch?v=', 'embed/').split('&')[0];
-        return url;
-    }
-
     function saveSettings() {
         localStorage.setItem('MOW_FighterA_Name', document.getElementById('fA_name').value.trim());
-        localStorage.setItem('MOW_FighterA_Video1', formatVideoLink(document.getElementById('fA_video1').value.trim()));
-        localStorage.setItem('MOW_FighterA_Video2', formatVideoLink(document.getElementById('fA_video2').value.trim()));
         localStorage.setItem('MOW_FighterB_Name', document.getElementById('fB_name').value.trim());
-        localStorage.setItem('MOW_FighterB_Video1', formatVideoLink(document.getElementById('fB_video1').value.trim()));
-        localStorage.setItem('MOW_FighterB_Video2', formatVideoLink(document.getElementById('fB_video2').value.trim()));
+        // Video links can be saved if needed
     }
 
-    function generatePrompt() {
+    function generateWeaponsPrompt() {
         saveSettings();
-
         const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
-        const nameB = document.getElementById('fB_name').value.trim() || 'Fighter B';
-
+        const nameB = document.getElementById('fB_name').value.trim();
         const vA1 = document.getElementById('fA_video1').value.trim();
         const vA2 = document.getElementById('fA_video2').value.trim();
         const vB1 = document.getElementById('fB_video1').value.trim();
         const vB2 = document.getElementById('fB_video2').value.trim();
 
-        const prompt = `You are a world-class MMA Fight IQ Analyst using the "Master the Weapons" system.
+        let prompt = `You are a world-class MMA Fight IQ Analyst using the "Master the Weapons" system.\n\n`;
 
-Analyze the fighter(s) using the 3 IQ Pillars (Timing, Adaptability, Energy Management) across all weapons.
+        if (!nameB) {
+            // Self-Assessment Mode
+            prompt += `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\nUse ONLY the videos provided below for analysis.\n\n`;
+            if (vA1) prompt += `Video 1 (Most Recent/Best): ${vA1}\n`;
+            if (vA2) prompt += `Video 2 (Different Style): ${vA2}\n`;
+        } else {
+            // Comparison Mode
+            prompt += `**FIGHT COMPARISON MODE**\n\n**Fighter A:** ${nameA}\n`;
+            if (vA1) prompt += `Video 1: ${vA1}\n`;
+            if (vA2) prompt += `Video 2: ${vA2}\n`;
+            prompt += `\n**Fighter B:** ${nameB}\n`;
+            if (vB1) prompt += `Video 1: ${vB1}\n`;
+            if (vB2) prompt += `Video 2: ${vB2}\n`;
+        }
 
-**Fighter A:** ${nameA}
-Video 1: ${vA1 || 'None'}
-Video 2: ${vA2 || 'None'}
+        prompt += `\nReturn ONLY the scores in this exact CSV-style format (no extra text at all):\n\nWeapon,A_T,A_A,A_E,B_T,B_A,B_E\nJab/Cross,X,X,X,X,X,X\nRoundhouse Kick,X,X,X,X,X,X\nTeep (Push Kick),X,X,X,X,X,X\nLow Kick,X,X,X,X,X,X\nElbow Strike,X,X,X,X,X,X\nKnee Strike,X,X,X,X,X,X\nClinching,X,X,X,X,X,X\nDouble Leg Takedown,X,X,X,X,X,X\nSingle Leg Takedown,X,X,X,X,X,X\nSprawl (Defense),X,X,X,X,X,X\nGuard Pass,X,X,X,X,X,X\nMount Control,X,X,X,X,X,X\nSide Control,X,X,X,X,X,X\nArmbar from Guard,X,X,X,X,X,X\nTriangle Choke,X,X,X,X,X,X\nRear Naked Choke,X,X,X,X,X,X\nGround-and-Pound,X,X,X,X,X,X`;
 
-**Fighter B:** ${nameB}
-Video 1: ${vB1 || 'None'}
-Video 2: ${vB2 || 'None'}
+        document.getElementById('promptDisplay').textContent = prompt;
+    }
 
-Return ONLY the scores in this exact CSV-style table format (no extra text):
+    function generateXFactorPrompt() {
+        saveSettings();
+        const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
+        const nameB = document.getElementById('fB_name').value.trim();
 
-Weapon,A_T,A_A,A_E,B_T,B_A,B_E
-Jab/Cross,X,X,X,X,X,X
-Roundhouse Kick,X,X,X,X,X,X
-Teep (Push Kick),X,X,X,X,X,X
-Low Kick,X,X,X,X,X,X
-Elbow Strike,X,X,X,X,X,X
-Knee Strike,X,X,X,X,X,X
-Clinching,X,X,X,X,X,X
-Double Leg Takedown,X,X,X,X,X,X
-Single Leg Takedown,X,X,X,X,X,X
-Sprawl (Defense),X,X,X,X,X,X
-Guard Pass,X,X,X,X,X,X
-Mount Control,X,X,X,X,X,X
-Side Control,X,X,X,X,X,X
-Armbar from Guard,X,X,X,X,X,X
-Triangle Choke,X,X,X,X,X,X
-Rear Naked Choke,X,X,X,X,X,X
-Ground-and-Pound,X,X,X,X,X,X
+        let prompt = `You are an elite MMA Contextual Analyst.\n\n`;
 
-Be precise with numbers (1-10). Side Control is a critical metric - always include it.`;
+        if (!nameB) {
+            prompt += `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\nUse ONLY the videos provided for this analysis.\n`;
+        } else {
+            prompt += `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n**Fighter B:** ${nameB}\n\n`;
+        }
+
+        prompt += `\nScore each category from 0 to 10.\n\nReturn ONLY this exact format (no extra text):\n\nCategory,A_Score,B_Score\nAero-Cardio,X,X\nDurability/Chin,X,X\nPsychology/Momentum,X,X\nGeography/Spot,X,X\nCorner/Technical Plan,X,X\nPhysical Delta,X,X`;
 
         document.getElementById('promptDisplay').textContent = prompt;
     }
@@ -227,39 +211,30 @@ Be precise with numbers (1-10). Side Control is a critical metric - always inclu
         alert("✅ Prompt copied to clipboard!");
     }
 
-    function saveScores() {
+    function saveWeaponsScores() {
         const scores = document.getElementById('aiScores').value.trim();
         if (scores) {
             localStorage.setItem('MOW_AI_Scores', scores);
-            alert("✅ Scores saved! You can now load them in Scouting Matrix and other modules.");
-        } else {
-            alert("Please paste the AI scores first.");
+            alert("✅ Weapons Scores Saved!");
+        }
+    }
+
+    function saveXFactorScores() {
+        const scores = document.getElementById('xfScores').value.trim();
+        if (scores) {
+            localStorage.setItem('MOW_XFactor_Scores', scores);
+            alert("✅ X-Factor Scores Saved!");
         }
     }
 
     function clearAll() {
-        if (confirm("Clear all data?")) {
-            document.getElementById('fA_name').value = '';
-            document.getElementById('fA_video1').value = '';
-            document.getElementById('fA_video2').value = '';
-            document.getElementById('fB_name').value = '';
-            document.getElementById('fB_video1').value = '';
-            document.getElementById('fB_video2').value = '';
-            document.getElementById('aiScores').value = '';
-            document.getElementById('promptDisplay').textContent = 'Fill details and click Generate Prompt...';
-            localStorage.removeItem('MOW_AI_Scores');
+        if (confirm("Clear ALL data?")) {
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+            document.getElementById('promptDisplay').textContent = 'Fill details and click Generate...';
+            localStorage.clear();
             alert("✅ All data cleared.");
         }
     }
-
-    window.onload = () => {
-        document.getElementById('fA_name').value = localStorage.getItem('MOW_FighterA_Name') || '';
-        document.getElementById('fA_video1').value = localStorage.getItem('MOW_FighterA_Video1') || '';
-        document.getElementById('fA_video2').value = localStorage.getItem('MOW_FighterA_Video2') || '';
-        document.getElementById('fB_name').value = localStorage.getItem('MOW_FighterB_Name') || '';
-        document.getElementById('fB_video1').value = localStorage.getItem('MOW_FighterB_Video1') || '';
-        document.getElementById('fB_video2').value = localStorage.getItem('MOW_FighterB_Video2') || '';
-    };
 </script>
 </body>
 </html>
