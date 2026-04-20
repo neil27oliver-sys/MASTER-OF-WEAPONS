@@ -30,6 +30,7 @@
             border-bottom: 2px solid var(--primary-orange);
             position: sticky;
             top: 0;
+            z-index: 100;
         }
 
         nav a {
@@ -38,83 +39,84 @@
             margin: 0 20px;
             text-transform: uppercase;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .hero-banner {
-            padding: 60px 20px;
+            padding: 80px 20px;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('Master.jpg');
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('Master.jpg');
             background-size: cover;
             background-position: center;
-            border-bottom: 1px solid var(--border);
         }
 
         .hero-banner h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: var(--primary-orange);
             text-transform: uppercase;
-            margin: 0;
+            margin: 0 0 10px 0;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 40px auto;
             padding: 0 20px;
         }
 
-        section {
+        section, .pro-tip, .rule-box {
             background: var(--card-bg);
-            padding: 30px;
+            padding: 35px;
             border-radius: 12px;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             border: 1px solid var(--border);
         }
 
-        h2 {
-            color: var(--gold);
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--primary-orange);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-
-        .pillar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .pillar-box {
-            background: #222;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-orange);
-        }
-
-        .pillar-box strong {
-            color: var(--primary-orange);
-            display: block;
-            font-size: 1.2rem;
-            margin-bottom: 5px;
+        .pro-tip {
+            border: 2px solid var(--gold);
+            background: rgba(255, 215, 0, 0.08);
         }
 
         .rule-box {
             background: rgba(255, 102, 0, 0.1);
             border: 2px dashed var(--primary-orange);
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 8px;
+        }
+
+        h2 {
+            color: var(--gold);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--primary-orange);
+            padding-bottom: 12px;
+            margin-top: 0;
+        }
+
+        .pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .pillar-box {
+            background: #222;
+            padding: 22px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary-orange);
+        }
+
+        .pillar-box strong {
+            color: var(--primary-orange);
+            display: block;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
         }
 
         .highlight { color: var(--primary-orange); font-weight: bold; }
 
         footer {
             text-align: center;
-            padding: 40px;
+            padding: 50px 20px;
             color: #666;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
     </style>
 </head>
@@ -123,20 +125,20 @@
     <nav>
         <a href="index.html">Home</a>
         <a href="Setup.html">Setup</a>
+        <a href="ScoutingMatrix.html">Scouting Matrix</a>
         <a href="Methodology.html">Methodology</a>
     </nav>
 
     <div class="hero-banner">
         <h1>Tactical Methodology</h1>
-        <p style="color: var(--gold);">Bridging the Gap between Physical Performance and Fight IQ</p>
+        <p style="color: var(--gold); font-size: 1.3rem;">Bridging Physical Performance and Fight IQ</p>
     </div>
 
     <main class="container">
 
-        <!-- Existing sections remain the same -->
         <section>
             <h2>1. The Three IQ Pillars</h2>
-            <p>Every weapon in your arsenal (Jab, Sprawl, Armbar, etc.) is measured by three mental markers. We don't just ask if you <em>know</em> the move, we ask if you have the IQ to <em>apply</em> it under fire.</p>
+            <p>Every weapon in your arsenal is measured by three mental markers. We don't just ask if you <em>know</em> the move, we ask if you have the IQ to <em>apply</em> it under fire.</p>
             
             <div class="pillar-grid">
                 <div class="pillar-box">
@@ -149,7 +151,7 @@
                 </div>
                 <div class="pillar-box">
                     <strong>Energy (E)</strong>
-                    Efficiency and economy. Executing with professional poise without "burning your lungs."
+                    Efficiency and economy. Executing with professional poise without burning gas.
                 </div>
             </div>
         </section>
@@ -166,44 +168,32 @@
 
         <section>
             <div class="rule-box">
-            <h3>The "Weak Link" Rule</h3>
-            <p><strong>Your Evolution Phase is defined by your lowest-scoring weapon.</strong> If you are an elite striker (Score: 9) but your Sprawl is a "3," you are a <span class="highlight">Phase 1</span> fighter. We train the weakness until it matches the strength.</p>
-        </div>
+                <h3>The "Weak Link" Rule</h3>
+                <p><strong>Your Evolution Phase is defined by your lowest-scoring weapon.</strong> If you are an elite striker (Score: 9) but your Sprawl is a "3," you are a <span class="highlight">Phase 1</span> fighter. We train the weakness until it matches the strength.</p>
+            </div>
+        </section>
 
         <section>
             <h2>3. Evolution Phases</h2>
-            <table class="phase-table">
+            <table style="width:100%; border-collapse:collapse; margin-top:20px;">
                 <thead>
                     <tr>
-                        <th>Phase</th>
-                        <th>Rank</th>
-                        <th>Strategic Focus</th>
+                        <th style="background:#222; color:var(--gold); padding:12px;">Phase</th>
+                        <th style="background:#222; color:var(--gold); padding:12px;">Rank</th>
+                        <th style="background:#222; color:var(--gold); padding:12px;">Strategic Focus</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="highlight">P1</td>
-                        <td>Foundation</td>
-                        <td><strong>Engine Building:</strong> Mechanics, Aerobic base, and Basic defense.</td>
-                    </tr>
-                    <tr>
-                        <td class="highlight">P2</td>
-                        <td>Skill Development</td>
-                        <td><strong>Refinement:</strong> Precision, Fluidity, and Combo Integration.</td>
-                    </tr>
-                    <tr>
-                        <td class="highlight">P3</td>
-                        <td>Amateur Integration</td>
-                        <td><strong>Synergy:</strong> Full-speed combat, Takedown chains, and Finishing IQ.</td>
-                    </tr>
+                    <tr><td class="highlight">P1</td><td>Foundation</td><td><strong>Engine Building:</strong> Mechanics, Aerobic base, and Basic defense.</td></tr>
+                    <tr><td class="highlight">P2</td><td>Skill Development</td><td><strong>Refinement:</strong> Precision, Fluidity, and Combo Integration.</td></tr>
+                    <tr><td class="highlight">P3</td><td>Amateur Integration</td><td><strong>Synergy:</strong> Full-speed combat, Takedown chains, and Finishing IQ.</td></tr>
                 </tbody>
             </table>
-        </section>
         </section>
 
         <section>
             <h2>4. Interpreting the Visual IQ Shape</h2>
-             <p>The Radar Chart provides an instant blueprint of your combat soul:</p>
+            <p>The Radar Chart provides an instant blueprint of your combat soul:</p>
             <ul>
                 <li><strong>Symmetry:</strong> Indicates a "Generalist" with balanced skills.</li>
                 <li><strong>Spikes:</strong> Your "Specialist" zones where you are most dangerous.</li>
@@ -211,69 +201,66 @@
             </ul>
         </section>
 
-        <!-- NEW SECTION -->
         <section>
             <h2>5. How to Use the Full Master of Weapons System</h2>
             <p>The real power comes when you combine all tools together as one complete training & analysis ecosystem.</p>
-
-            <h3 style="color:var(--gold); margin-top:25px;">Step-by-Step Workflow</h3>
             <ol>
-                <li><strong>Setup.html</strong> → Paste 1–2 fight videos per fighter + Generate Prompt → Get AI Scores</li>
+                <li><strong>Setup.html</strong> → Load videos → Generate Prompt → Paste AI Scores</li>
                 <li><strong>ScoutingMatrix.html</strong> → Load scores → See radar chart and Tactical Analysis</li>
                 <li><strong>FighterAssessment.html</strong> → Load scores → See discipline power bars and current Evolution Phase</li>
                 <li><strong>CoachAssessment.html (Couch to Cage)</strong> → Load scores → Get Physical + Oral breakdown</li>
                 <li><strong>EnhancedTraining.html</strong> → Automatically generates targeted drills for your biggest weaknesses</li>
                 <li><strong>BettingMatrix.html</strong> → Turn tactical insights into strategic betting edges</li>
             </ol>
+        </section>
 
-            <h3 style="color:var(--gold); margin-top:25px;">Using Video Analysis for Progress Tracking</h3>
-            <p>Upload fight footage (old fights vs new fights) into Setup.html to create a timeline of improvement:</p>
+        <!-- PRO TIP -->
+        <div class="pro-tip">
+            <h3>🎯 PRO TIP: Best Video Selection Strategy</h3>
+            <p><strong>For the most accurate analysis, always use these two videos:</strong></p>
             <ul>
-                <li>Compare radar charts from Fight 1 vs Fight 2</li>
-                <li>Track if weak weapons (e.g. Sprawl, Side Control) have improved</li>
-                <li>Measure if Overall Fighter IQ has increased over time</li>
-                <li>Use Enhanced Training drills between fights and re-test after 4–6 weeks</li>
+                <li><strong>1. Most Recent Fight</strong> – Shows current form, recent improvements or declines</li>
+                <li><strong>2. Best Performance Fight</strong> – Shows the fighter’s peak potential and true capability</li>
             </ul>
-            <div class="methodology-section">
-    <h2>Enhanced Betting Intelligence & Recommendation Engine</h2>
-    
-    <p>The Master of Weapons Betting Matrix has been upgraded with a dual-layer analytical system to deliver sharper, more realistic tactical recommendations.</p>
+            <p>This combination gives the AI the best picture of both <strong>current state</strong> and <strong>ceiling</strong>.</p>
+            
+            <p><strong>For Single Fighter Training (Enhanced Training module):</strong> Use the same rule — recent fight + best performance fight. This allows the system to clearly identify weaknesses that still need work and track real progress over time.</p>
+        </div>
 
-    <h3>Core Philosophy</h3>
-    <p><strong>Weapon Scouting (70-80% weight)</strong> remains the foundation of the model. This is pure fight tape analysis — Timing, Adaptability, and Energy across 17 specific weapons. This tells us <strong>what</strong> each fighter is capable of technically.</p>
+        <!-- ENHANCED BETTING SECTION -->
+        <section>
+            <h2>Enhanced Betting Intelligence & Recommendation Engine</h2>
+            
+            <p>The Master of Weapons Betting Matrix has been upgraded with a dual-layer analytical system to deliver sharper, more realistic tactical recommendations.</p>
 
-    <h3>The X-Factor Layer (20-30% weight)</h3>
-    <p>No amount of technical scouting can fully predict real fight night performance. The new <strong>X-Factor</strong> is a contextual multiplier that captures the human and situational elements that often decide fights:</p>
-    
-    <ul>
-        <li><strong>Aero-Cardio</strong> – Gas tank, pace recovery, and deep waters performance</li>
-        <li><strong>Durability/Chin</strong> – Ability to absorb damage and stay composed</li>
-        <li><strong>Psychology/Momentum</strong> – Confidence, winning/losing streaks, mental state</li>
-        <li><strong>Geography/Spot</strong> – Home advantage, crowd pressure, travel, altitude</li>
-        <li><strong>Corner/Technical Plan</strong> – Coach quality and in-fight adjustments</li>
-        <li><strong>Physical Delta</strong> – Age, reach, height, and athletic prime adjusted</li>
-    </ul>
+            <h3>Core Philosophy</h3>
+            <p><strong>Weapon Scouting (70-80% weight)</strong> remains the foundation of the model. This is pure fight tape analysis — Timing, Adaptability, and Energy across 17 specific weapons. This tells us <strong>what</strong> each fighter is capable of technically.</p>
 
-    <p>Each category is scored 0-10 per fighter. The X-Factor acts as a smart adjustment rather than overriding the tape study. This directly addresses situations like fighters "sitting on their laurels", complacency after title wins, or massive home-crowd energy.</p>
+            <h3>The X-Factor Layer (20-30% weight)</h3>
+            <p>No amount of technical scouting can fully predict real fight night performance. The new <strong>X-Factor</strong> is a contextual multiplier that captures the human and situational elements that often decide fights:</p>
+            
+            <ul>
+                <li><strong>Aero-Cardio</strong> – Gas tank, pace recovery, and deep waters performance</li>
+                <li><strong>Durability/Chin</strong> – Ability to absorb damage and stay composed</li>
+                <li><strong>Psychology/Momentum</strong> – Confidence, winning/losing streaks, mental state</li>
+                <li><strong>Geography/Spot</strong> – Home advantage, crowd pressure, travel, altitude</li>
+                <li><strong>Corner/Technical Plan</strong> – Coach quality and in-fight adjustments</li>
+                <li><strong>Physical Delta</strong> – Age, reach, height, and athletic prime adjusted</li>
+            </ul>
 
-    <h3>Final Scoring Formula</h3>
-    <p><strong>Final Score = (Weapon Average × 0.75) + (X-Factor Average × 0.25)</strong></p>
-    <p>The weighting is adjustable via slider (10% – 40%) so you can tune the model based on fight style or your own edge.</p>
+            <p>Each category is scored 0-10 per fighter. The X-Factor acts as a smart adjustment rather than overriding the tape study.</p>
 
-    <h3>Radar Graph 2.0</h3>
-    <p>The new 6-bucket radar visualizes the battle at a glance:</p>
-    <ul>
-        <li>Stand-up • Clinch/Control • Takedowns • Submission/Guard • Defense/Anti-Grapple • X-Factor</li>
-    </ul>
+            <h3>Final Scoring Formula</h3>
+            <p><strong>Final Score = (Weapon Average × 0.75) + (X-Factor Average × 0.25)</strong></p>
+            <p>The weighting is adjustable via slider (10% – 40%) so you can tune the model based on fight style or your own edge.</p>
 
-    <p>This combined system gives clearer Moneyline, Method of Victory, Total Rounds, and Prop recommendations while still trusting the core weapon-by-weapon scouting that built Master of Weapons.</p>
-</div>
+            <h3>Radar Graph 2.0</h3>
+            <p>The new 6-bucket radar visualizes the battle at a glance:</p>
+            <ul>
+                <li>Stand-up • Clinch/Control • Takedowns • Submission/Guard • Defense/Anti-Grapple • X-Factor</li>
+            </ul>
 
-            <div class="rule-box">
-                <h3>Golden Rule of Progress</h3>
-                <p><strong>Your next fight should show visible improvement in your lowest-scoring weapons from the previous fight.</strong><br>
-                If your weakest area does not improve, you are not training intelligently.</p>
-            </div>
+            <p>This combined system gives clearer Moneyline, Method of Victory, Total Rounds, and Prop recommendations while still trusting the core weapon-by-weapon scouting that built Master of Weapons.</p>
         </section>
 
     </main>
