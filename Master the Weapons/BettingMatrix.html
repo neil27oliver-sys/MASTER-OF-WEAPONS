@@ -63,7 +63,7 @@
 </nav>
 
 <div class="container">
-    <h1>🔥 MMA STRATEGIC BETTING MATRIX v2.1</h1>
+    <h1>🔥 MMA STRATEGIC BETTING MATRIX v2.2</h1>
 
     <div class="matrix-card">
         <h2 style="color:var(--gold); text-align:center;">WEAPONS + X-FACTOR COMBINED ANALYSIS</h2>
@@ -71,7 +71,7 @@
         <div class="slider-container">
             <label>X-Factor Weight: <span id="weightValue">35</span>% 
                 <span style="color:#aaa; font-size:0.9rem; font-weight: normal; margin-left: 10px;">
-                    (Adjusting importance of Momentum/Physical/Spot)
+                    (Momentum, Cardio, OTC Life Factors, etc.)
                 </span>
             </label>
             <input type="range" id="xfWeight" min="5" max="95" value="35" step="5">
@@ -94,6 +94,11 @@
         <h3 style="margin-top:0; color:var(--gold);">TACTICAL BETTING RECOMMENDATION</h3>
         <div id="adviceContent">Crunching numbers...</div>
     </div>
+    <div style="margin-top: 25px; padding: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; color: #aaa;">
+    <strong>Disclaimer:</strong> This Betting Matrix is for entertainment and educational purposes only. 
+    It is not financial or betting advice. MMA is a high-variance sport where luck, referee decisions, 
+    and unforeseen events can heavily influence outcomes. Always gamble responsibly and do your own research.
+</div>
 </div>
 
 <script>
@@ -116,12 +121,13 @@
                 const cols = line.split(',');
                 if (cols.length < 7) return; 
                 
-                // Average the T, A, E scores for each fighter per weapon
                 const aVal = (parseFloat(cols[1]) + parseFloat(cols[2]) + parseFloat(cols[3])) / 3;
                 const bVal = (parseFloat(cols[4]) + parseFloat(cols[5]) + parseFloat(cols[6])) / 3;
                 
                 if (!isNaN(aVal) && !isNaN(bVal)) {
-                    totalA += aVal; totalB += bVal; count++;
+                    totalA += aVal; 
+                    totalB += bVal; 
+                    count++;
                 }
             });
             if (count > 0) {
@@ -130,7 +136,7 @@
             }
         }
 
-        // --- X-FACTOR PARSING ---
+        // --- X-FACTOR PARSING (now includes OTC Form Trend) ---
         if (xfRaw.trim() !== "") {
             const lines = xfRaw.trim().split('\n');
             let totalA = 0, totalB = 0, count = 0;
@@ -140,7 +146,9 @@
                     const a = parseFloat(cols[1]);
                     const b = parseFloat(cols[2]);
                     if (!isNaN(a) && !isNaN(b)) {
-                        totalA += a; totalB += b; count++;
+                        totalA += a; 
+                        totalB += b; 
+                        count++;
                     }
                 }
             });
@@ -190,12 +198,12 @@
 
         let recHtml = `
             <p><span class="tag">SIGNAL: ${confidence} CONFIDENCE</span> <span class="status-win">${winner.toUpperCase()} IS THE PLAY</span></p>
-            <p>Weighting strategy: ${ (weaponWeight*100).toFixed(0) }% Skill / ${ (xfWeight*100).toFixed(0) }% Circumstance</p>
+            <p>Weighting: ${ (weaponWeight*100).toFixed(0) }% Weapons / ${ (xfWeight*100).toFixed(0) }% Context (incl. OTC)</p>
             <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
-            <strong>Execution:</strong><br>
+            <strong>Recommended Bet:</strong><br>
             • Primary: ${winner} Moneyline<br>
-            • Alt: ${diff > 0.8 ? winner + " inside the distance" : winner + " by decision"}<br>
-            • Logic: ${winner} holds a ${diff.toFixed(2)} unit advantage at this risk weight.
+            • Alternative: ${diff > 0.8 ? winner + " Inside the Distance" : winner + " by Decision"}<br>
+            <small>Logic: ${winner} holds a ${diff.toFixed(2)} point edge at current weighting.</small>
         `;
 
         document.getElementById('adviceContent').innerHTML = recHtml;
@@ -204,12 +212,8 @@
     // --- INITIALIZE ---
     document.addEventListener('DOMContentLoaded', () => {
         const slider = document.getElementById('xfWeight');
-        
-        // Listen for both 'input' (live drag) and 'change' (on release)
         slider.addEventListener('input', analyzeBetting);
-        
-        // Initial run
-        analyzeBetting();
+        analyzeBetting();   // Initial run
     });
 </script>
 </body>
