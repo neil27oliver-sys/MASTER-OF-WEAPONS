@@ -49,6 +49,13 @@
         }
         label { color: var(--gold); font-weight: bold; display: block; margin-bottom: 10px; }
         input[type="range"] { width: 100%; accent-color: var(--gold); cursor: pointer; }
+        
+        .swing-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -63,11 +70,12 @@
 </nav>
 
 <div class="container">
-    <h1>🔥 MMA STRATEGIC BETTING MATRIX v2.2</h1>
+    <h1>🔥 MMA STRATEGIC BETTING MATRIX v2.3</h1>
 
     <div class="matrix-card">
         <h2 style="color:var(--gold); text-align:center;">WEAPONS + X-FACTOR COMBINED ANALYSIS</h2>
         
+        <!-- X-Factor Weight Slider -->
         <div class="slider-container">
             <label>X-Factor Weight: <span id="weightValue">35</span>% 
                 <span style="color:#aaa; font-size:0.9rem; font-weight: normal; margin-left: 10px;">
@@ -75,6 +83,18 @@
                 </span>
             </label>
             <input type="range" id="xfWeight" min="5" max="95" value="35" step="5">
+        </div>
+
+        <!-- New Last 24h Swing Slider -->
+        <div class="slider-container">
+            <label>Last 24h Swing <span id="swingValue" style="color:var(--gold);">0</span></label>
+            <div class="swing-label">
+                <span style="color:#4caf50;">Fighter A</span>
+                <span style="color:#aaa;">Neutral</span>
+                <span style="color:#ff4444;">Fighter B</span>
+            </div>
+            <input type="range" id="lastSwing" min="-10" max="10" value="0" step="1">
+            <small style="color:#aaa;">Final 24-hour prefight events, weigh-in drama, last-minute news, staredown tension, etc.</small>
         </div>
 
         <table id="summaryTable">
@@ -94,11 +114,13 @@
         <h3 style="margin-top:0; color:var(--gold);">TACTICAL BETTING RECOMMENDATION</h3>
         <div id="adviceContent">Crunching numbers...</div>
     </div>
+
+    <!-- Disclaimer -->
     <div style="margin-top: 25px; padding: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; color: #aaa;">
-    <strong>Disclaimer:</strong> This Betting Matrix is for entertainment and educational purposes only. 
-    It is not financial or betting advice. MMA is a high-variance sport where luck, referee decisions, 
-    and unforeseen events can heavily influence outcomes. Always gamble responsibly and do your own research.
-</div>
+        <strong>Disclaimer:</strong> This Betting Matrix is for entertainment and educational purposes only. 
+        It is not financial or betting advice. MMA is a high-variance sport where luck, referee decisions, 
+        and unforeseen events can heavily influence outcomes. Always gamble responsibly and do your own research.
+    </div>
 </div>
 
 <script>
@@ -112,7 +134,7 @@
         let weaponAvgA = 5.0, weaponAvgB = 5.0;
         let xfAvgA = 5.0, xfAvgB = 5.0;
 
-        // --- WEAPON PARSING ---
+        // Weapon & X-Factor Parsing (same as before)
         if (weaponsRaw.trim() !== "") {
             const lines = weaponsRaw.trim().split('\n');
             let totalA = 0, totalB = 0, count = 0;
@@ -120,14 +142,10 @@
                 if (!line.includes(',')) return;
                 const cols = line.split(',');
                 if (cols.length < 7) return; 
-                
                 const aVal = (parseFloat(cols[1]) + parseFloat(cols[2]) + parseFloat(cols[3])) / 3;
                 const bVal = (parseFloat(cols[4]) + parseFloat(cols[5]) + parseFloat(cols[6])) / 3;
-                
                 if (!isNaN(aVal) && !isNaN(bVal)) {
-                    totalA += aVal; 
-                    totalB += bVal; 
-                    count++;
+                    totalA += aVal; totalB += bVal; count++;
                 }
             });
             if (count > 0) {
@@ -136,7 +154,6 @@
             }
         }
 
-        // --- X-FACTOR PARSING (now includes OTC Form Trend) ---
         if (xfRaw.trim() !== "") {
             const lines = xfRaw.trim().split('\n');
             let totalA = 0, totalB = 0, count = 0;
@@ -146,9 +163,7 @@
                     const a = parseFloat(cols[1]);
                     const b = parseFloat(cols[2]);
                     if (!isNaN(a) && !isNaN(b)) {
-                        totalA += a; 
-                        totalB += b; 
-                        count++;
+                        totalA += a; totalB += b; count++;
                     }
                 }
             });
@@ -158,17 +173,23 @@
             }
         }
 
-        // --- WEIGHTED MATH ---
-        const currentSliderVal = document.getElementById('xfWeight').value;
-        document.getElementById('weightValue').textContent = currentSliderVal;
-
-        const xfWeight = parseFloat(currentSliderVal) / 100;
+        // Sliders
+        const xfWeight = parseFloat(document.getElementById('xfWeight').value) / 100;
         const weaponWeight = 1 - xfWeight;
+        const swingValue = parseFloat(document.getElementById('lastSwing').value);
 
-        const finalA = (weaponAvgA * weaponWeight) + (xfAvgA * xfWeight);
-        const finalB = (weaponAvgB * weaponWeight) + (xfAvgB * xfWeight);
+        document.getElementById('weightValue').textContent = document.getElementById('xfWeight').value;
+        document.getElementById('swingValue').textContent = swingValue;
 
-        // --- RENDER TABLE ---
+        // Base calculation
+        let finalA = (weaponAvgA * weaponWeight) + (xfAvgA * xfWeight);
+        let finalB = (weaponAvgB * weaponWeight) + (xfAvgB * xfWeight);
+
+        // Apply Last 24h Swing (±0.25 per point)
+        finalA += (swingValue * -0.25);
+        finalB += (swingValue * 0.25);
+
+        // Render Table
         const bucketsHTML = `
             <tr>
                 <td><strong>Technical Skills (Weapons)</strong></td>
@@ -191,29 +212,33 @@
         `;
         document.getElementById('bucketBody').innerHTML = bucketsHTML;
 
-        // --- RECOMMENDATION ENGINE ---
+        // Recommendation
         const diff = Math.abs(finalA - finalB);
         let winner = finalB > finalA ? nameB : nameA;
         let confidence = diff > 1.0 ? "HIGH" : (diff > 0.4 ? "MEDIUM" : "LOW/VOLATILE");
 
         let recHtml = `
             <p><span class="tag">SIGNAL: ${confidence} CONFIDENCE</span> <span class="status-win">${winner.toUpperCase()} IS THE PLAY</span></p>
-            <p>Weighting: ${ (weaponWeight*100).toFixed(0) }% Weapons / ${ (xfWeight*100).toFixed(0) }% Context (incl. OTC)</p>
+            <p>Weighting: ${ (weaponWeight*100).toFixed(0) }% Weapons / ${ (xfWeight*100).toFixed(0) }% Context (incl. OTC) | Last 24h Swing: ${swingValue > 0 ? '+' : ''}${swingValue}</p>
             <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
             <strong>Recommended Bet:</strong><br>
             • Primary: ${winner} Moneyline<br>
             • Alternative: ${diff > 0.8 ? winner + " Inside the Distance" : winner + " by Decision"}<br>
-            <small>Logic: ${winner} holds a ${diff.toFixed(2)} point edge at current weighting.</small>
+            <small>Logic: ${winner} holds a ${diff.toFixed(2)} point edge after Last 24h Swing.</small>
         `;
 
         document.getElementById('adviceContent').innerHTML = recHtml;
     }
 
-    // --- INITIALIZE ---
+    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-        const slider = document.getElementById('xfWeight');
-        slider.addEventListener('input', analyzeBetting);
-        analyzeBetting();   // Initial run
+        const xfSlider = document.getElementById('xfWeight');
+        const swingSlider = document.getElementById('lastSwing');
+        
+        xfSlider.addEventListener('input', analyzeBetting);
+        swingSlider.addEventListener('input', analyzeBetting);
+        
+        analyzeBetting();
     });
 </script>
 </body>
