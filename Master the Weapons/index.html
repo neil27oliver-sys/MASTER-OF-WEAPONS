@@ -64,15 +64,26 @@
                 </div>
             </div>
 
-            <!-- Promo Banner - Now promotes paid unlock -->
-            <div class="promo-banner">
-                <p><strong>Couch to Cage System</strong></p>
-                <p>Full Fighter Assessment + Coach Assessment + Enhanced Training Tools</p>
-                <p style="color:var(--gold); font-weight:bold;">One-time payment unlocks everything</p>
-                <a href="javascript:void(0)" onclick="openGate()" id="lock-btn" style="color:var(--gold); font-weight:bold; text-decoration:none; font-size:1.1rem;">
-                    🔒 UNLOCK FULL ACCESS - $3
-                </a>
-            </div>
+<!-- Promo Banner - Couch to Cage Protected -->
+<div class="promo-banner">
+    <p><strong>Couch to Cage System</strong></p>
+    <p>Couch to Cage is the underlying system for Fighter Assessment and Coach Assessment.</p>
+    
+    <p><strong>Link:</strong> 
+        <a href="javascript:void(0)" onclick="guardCouchToCage()" style="color:var(--gold); text-decoration:underline;">
+            https://ctc-three.vercel.app/
+        </a>
+    </p>
+    
+    <p style="color:#ffcc00; font-weight:bold; margin:15px 0;">
+        Full access unlocks after one-time payment
+    </p>
+    
+    <a href="javascript:void(0)" onclick="openGate()" id="lock-btn" 
+       style="color:var(--gold); font-weight:bold; text-decoration:none; font-size:1.2rem;">
+        🔒 UNLOCK FULL ACCESS - $3
+    </a>
+</div>
 
             <div class="card">
                 <img src="assets/2.jpg" alt="Betting" class="card-img">
@@ -161,6 +172,13 @@
         if (isPaid) { 
             document.getElementById('lock-btn').innerHTML = "✅ FULL SYSTEM UNLOCKED"; 
         }
+        function guardCouchToCage() {
+    if (isPaid) {
+        window.open('https://ctc-three.vercel.app/', '_blank');
+    } else {
+        openGate();   // Show paywall
+    }
+}
     </script>
 </body>
 </html>
