@@ -81,7 +81,7 @@
     
     <a href="javascript:void(0)" onclick="openGate()" id="lock-btn" 
        style="color:var(--gold); font-weight:bold; text-decoration:none; font-size:1.2rem;">
-        🔒 UNLOCK FULL ACCESS - $3
+        🔒 UNLOCK FULL ACCESS - $18
     </a>
 </div>
 
@@ -154,7 +154,7 @@
             paypal.Buttons({
                 createOrder: (data, actions) => {
                     return actions.order.create({
-                        purchase_units: [{ amount: { value: '3.00' } }],
+                        purchase_units: [{ amount: { value: '18.00' } }],
                         application_context: { shipping_preference: 'NO_SHIPPING' }
                     });
                 },
