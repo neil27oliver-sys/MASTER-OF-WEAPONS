@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setup | Master the Weapons</title>
     <link rel="icon" type="image/png" href="assets/flavicon.png">
-    <script>
-        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
     <style>
         :root {
             --primary-orange: #FF6600;
@@ -165,12 +161,38 @@
 </div>
 
 <script>
+    const KEYS = {
+        fA_name: 'MOW_FighterA_Name',
+        fB_name: 'MOW_FighterB_Name',
+        fA_video1: 'MOW_FighterA_Video1',
+        fA_video2: 'MOW_FighterA_Video2',
+        fB_video1: 'MOW_FighterB_Video1',
+        fB_video2: 'MOW_FighterB_Video2',
+        aiScores: 'MOW_AI_Scores',
+        xfScores: 'MOW_XFactor_Scores'
+    };
+
+    function loadSavedData() {
+        Object.keys(KEYS).forEach(key => {
+            const saved = localStorage.getItem(KEYS[key]);
+            if (saved !== null) {
+                const el = document.getElementById(key);
+                if (el) el.value = saved;
+            }
+        });
+    }
+
     function saveSettings() {
-        localStorage.setItem('MOW_FighterA_Name', document.getElementById('fA_name').value.trim());
-        localStorage.setItem('MOW_FighterB_Name', document.getElementById('fB_name').value.trim());
+        localStorage.setItem(KEYS.fA_name, document.getElementById('fA_name').value.trim());
+        localStorage.setItem(KEYS.fB_name, document.getElementById('fB_name').value.trim());
+        localStorage.setItem(KEYS.fA_video1, document.getElementById('fA_video1').value.trim());
+        localStorage.setItem(KEYS.fA_video2, document.getElementById('fA_video2').value.trim());
+        localStorage.setItem(KEYS.fB_video1, document.getElementById('fB_video1').value.trim());
+        localStorage.setItem(KEYS.fB_video2, document.getElementById('fB_video2').value.trim());
     }
 
     function generateVideoSelectionPrompt() {
+        saveSettings();
         const nameA = document.getElementById('fA_name').value.trim();
         const nameB = document.getElementById('fB_name').value.trim();
         
@@ -188,12 +210,12 @@
     }
 
     function distributeVideos() {
-        const rawText = document.getElementById('videoPaste').value;
+        const rawText = document.getElementById('videoPaste').value.trim();
         const ytRegex = /(https?:\/\/[^\s]+)/g;
-        const matches = rawText.match(ytRegex);
+        const matches = rawText.match(ytRegex) || [];
 
-        if (!matches || matches.length === 0) {
-            alert("No links found in the paste box!");
+        if (matches.length === 0) {
+            alert("No YouTube links found in the paste box!");
             return;
         }
 
@@ -202,131 +224,152 @@
         if (matches[2]) document.getElementById('fB_video1').value = matches[2];
         if (matches[3]) document.getElementById('fB_video2').value = matches[3];
 
+        saveSettings();
         alert(`✅ Distributed ${Math.min(matches.length, 4)} links!`);
     }
 
     function generateWeaponsPrompt() {
-    saveSettings();
-    const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
-    const nameB = document.getElementById('fB_name').value.trim();
-    const vA1 = document.getElementById('fA_video1').value.trim();
-    const vA2 = document.getElementById('fA_video2').value.trim();
-    const vB1 = document.getElementById('fB_video1').value.trim();
-    const vB2 = document.getElementById('fB_video2').value.trim();
+        saveSettings();
+        // ... (your existing generateWeaponsPrompt code remains unchanged)
+        const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
+        const nameB = document.getElementById('fB_name').value.trim();
+        const vA1 = document.getElementById('fA_video1').value.trim();
+        const vA2 = document.getElementById('fA_video2').value.trim();
+        const vB1 = document.getElementById('fB_video1').value.trim();
+        const vB2 = document.getElementById('fB_video2').value.trim();
 
-    let prompt = `You are a world-class MMA Fight IQ Analyst using the "Master the Weapons" system.\n\n`;
-    
-    if (!nameB) {
-        prompt += `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\n`;
-        if (vA1) prompt += `Video 1 (Last Fight): ${vA1}\n`;
-        if (vA2) prompt += `Video 2 (Skill Set): ${vA2}\n`;
-    } else {
-        prompt += `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n`;
-        if (vA1) prompt += `Video 1 (Last Fight): ${vA1}\n`;
-        if (vA2) prompt += `Video 2 (Skill Set): ${vA2}\n`;
-        prompt += `\n**Fighter B:** ${nameB}\n`;
-        if (vB1) prompt += `Video 1 (Last Fight): ${vB1}\n`;
-        if (vB2) prompt += `Video 2 (Skill Set): ${vB2}\n`;
+        let prompt = `You are a world-class MMA Fight IQ Analyst using the "Master the Weapons" system.\n\n`;
+        
+        if (!nameB) {
+            prompt += `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\n`;
+            if (vA1) prompt += `Video 1 (Last Fight): ${vA1}\n`;
+            if (vA2) prompt += `Video 2 (Skill Set): ${vA2}\n`;
+        } else {
+            prompt += `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n`;
+            if (vA1) prompt += `Video 1 (Last Fight): ${vA1}\n`;
+            if (vA2) prompt += `Video 2 (Skill Set): ${vA2}\n`;
+            prompt += `\n**Fighter B:** ${nameB}\n`;
+            if (vB1) prompt += `Video 1 (Last Fight): ${vB1}\n`;
+            if (vB2) prompt += `Video 2 (Skill Set): ${vB2}\n`;
+        }
+
+        prompt += `\nWatch both videos carefully and score each weapon realistically based on actual fight output, not reputation or potential.\n\n`;
+        prompt += `Score 0-10 across 3 dimensions:\n`;
+        prompt += `- T (Timing): Setup, timing, and entry precision\n`;
+        prompt += `- A (Adaptability): Ability to adjust mid-fight\n`;
+        prompt += `- E (Effectiveness/Damage): Real success rate, damage caused, control gained, and fight impact. Be strict.\n\n`;
+
+        prompt += `**Critical Scoring Rules (Very Important):**\n`;
+        prompt += `- Prioritize actual output and fight impact over volume or flashy attempts.\n`;
+        prompt += `- Sprawl (Defense): Heavily reward consistent takedown defense and immediate get-ups.\n`;
+        prompt += `- Ground-and-Pound: Reward real damage inflicted, not just position.\n`;
+        prompt += `- Submissions: Reward actual threat and finishing ability, not just entries.\n`;
+        prompt += `- Striking: Reward cleaner, more damaging shots (especially leg kicks that visibly hurt opponent).\n`;
+        prompt += `- Control time and positional dominance matter for clinch, guard pass, mount, etc.\n\n`;
+
+        prompt += `Return ONLY the scores in CSV format (no extra text, no explanations):\n\n`;
+        prompt += `Weapon,A_T,A_A,A_E,B_T,B_A,B_E\n`;
+        prompt += `Jab/Cross,X,X,X,X,X,X\n`;
+        prompt += `Roundhouse Kick,X,X,X,X,X,X\n`;
+        prompt += `Teep (Push Kick),X,X,X,X,X,X\n`;
+        prompt += `Low Kick,X,X,X,X,X,X\n`;
+        prompt += `Elbow Strike,X,X,X,X,X,X\n`;
+        prompt += `Knee Strike,X,X,X,X,X,X\n`;
+        prompt += `Clinching,X,X,X,X,X,X\n`;
+        prompt += `Double Leg Takedown,X,X,X,X,X,X\n`;
+        prompt += `Single Leg Takedown,X,X,X,X,X,X\n`;
+        prompt += `Sprawl (Defense),X,X,X,X,X,X\n`;
+        prompt += `Guard Pass,X,X,X,X,X,X\n`;
+        prompt += `Mount Control,X,X,X,X,X,X\n`;
+        prompt += `Side Control,X,X,X,X,X,X\n`;
+        prompt += `Armbar from Guard,X,X,X,X,X,X\n`;
+        prompt += `Triangle Choke,X,X,X,X,X,X\n`;
+        prompt += `Rear Naked Choke,X,X,X,X,X,X\n`;
+        prompt += `Ground-and-Pound,X,X,X,X,X,X`;
+
+        document.getElementById('promptDisplay').textContent = prompt;
     }
 
-    prompt += `\nWatch both videos carefully and score each weapon realistically based on actual fight output, not reputation or potential.\n\n`;
-    prompt += `Score 0-10 across 3 dimensions:\n`;
-    prompt += `- T (Timing): Setup, timing, and entry precision\n`;
-    prompt += `- A (Adaptability): Ability to adjust mid-fight\n`;
-    prompt += `- E (Effectiveness/Damage): Real success rate, damage caused, control gained, and fight impact. Be strict.\n\n`;
+    function generateXFactorPrompt() {
+        saveSettings();
+        // ... (your existing generateXFactorPrompt code remains unchanged)
+        const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
+        const nameB = document.getElementById('fB_name').value.trim();
 
-    prompt += `**Critical Scoring Rules (Very Important):**\n`;
-    prompt += `- Prioritize actual output and fight impact over volume or flashy attempts.\n`;
-    prompt += `- Sprawl (Defense): Heavily reward consistent takedown defense and immediate get-ups.\n`;
-    prompt += `- Ground-and-Pound: Reward real damage inflicted, not just position.\n`;
-    prompt += `- Submissions: Reward actual threat and finishing ability, not just entries.\n`;
-    prompt += `- Striking: Reward cleaner, more damaging shots (especially leg kicks that visibly hurt opponent).\n`;
-    prompt += `- Control time and positional dominance matter for clinch, guard pass, mount, etc.\n\n`;
+        let prompt = `You are an elite MMA Contextual Analyst using the "Master the Weapons" system.\n\n`;
+        
+        prompt += (nameB) ? 
+            `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n**Fighter B:** ${nameB}\n\n` : 
+            `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\n`;
 
-    prompt += `Return ONLY the scores in CSV format (no extra text, no explanations):\n\n`;
-    prompt += `Weapon,A_T,A_A,A_E,B_T,B_A,B_E\n`;
-    prompt += `Jab/Cross,X,X,X,X,X,X\n`;
-    prompt += `Roundhouse Kick,X,X,X,X,X,X\n`;
-    prompt += `Teep (Push Kick),X,X,X,X,X,X\n`;
-    prompt += `Low Kick,X,X,X,X,X,X\n`;
-    prompt += `Elbow Strike,X,X,X,X,X,X\n`;
-    prompt += `Knee Strike,X,X,X,X,X,X\n`;
-    prompt += `Clinching,X,X,X,X,X,X\n`;
-    prompt += `Double Leg Takedown,X,X,X,X,X,X\n`;
-    prompt += `Single Leg Takedown,X,X,X,X,X,X\n`;
-    prompt += `Sprawl (Defense),X,X,X,X,X,X\n`;
-    prompt += `Guard Pass,X,X,X,X,X,X\n`;
-    prompt += `Mount Control,X,X,X,X,X,X\n`;
-    prompt += `Side Control,X,X,X,X,X,X\n`;
-    prompt += `Armbar from Guard,X,X,X,X,X,X\n`;
-    prompt += `Triangle Choke,X,X,X,X,X,X\n`;
-    prompt += `Rear Naked Choke,X,X,X,X,X,X\n`;
-    prompt += `Ground-and-Pound,X,X,X,X,X,X`;
+        prompt += `Score every category from 0-10 based on the fight videos and known fighter context.\n\n`;
+        prompt += `Return ONLY the CSV in this exact format (no extra text, no explanations):\n\n`;
+        prompt += `Category,A_Score,B_Score\n`;
+        prompt += `Aero-Cardio,X,X\n`;
+        prompt += `Durability/Chin,X,X\n`;
+        prompt += `Psychology/Momentum,X,X\n`;
+        prompt += `Geography/Spot,X,X\n`;
+        prompt += `Corner/Technical Plan,X,X\n`;
+        prompt += `Physical Delta,X,X\n`;
+        prompt += `OTC Form Trend (Outside-the-Cage),X,X\n\n`;
 
-    document.getElementById('promptDisplay').textContent = prompt;
-}
+        prompt += `### IMPORTANT SCORING GUIDELINE FOR OTC FORM TREND (Be strict and realistic):\n`;
+        prompt += `OTC Form Trend (Outside-the-Cage) evaluates real-life factors in the 4–8 weeks before the fight that can affect performance.\n`;
+        prompt += `Consider: family/personal problems, financial stress, coaching camp stability or drama, training consistency, legal/regulatory issues, motivation level, contract situations, media/social media distractions, recent win/loss streak momentum, or any public camp noise.\n\n`;
+        prompt += `Scoring (Be critical):\n`;
+        prompt += `10 = Perfect, drama-free camp, peak focus and motivation\n`;
+        prompt += `9   = Excellent camp, only tiny distractions\n`;
+        prompt += `8   = Solid professional camp\n`;
+        prompt += `7   = Average with some minor issues\n`;
+        prompt += `6   = Noticeable problems or inconsistency in recent performances\n`;
+        prompt += `5   = Clear camp issues affecting preparation or focus\n`;
+        prompt += `1-4 = Major red flags (chaos, major drama, poor motivation, etc.)\n`;
 
-   function generateXFactorPrompt() {
-    saveSettings();
-    const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
-    const nameB = document.getElementById('fB_name').value.trim();
-
-    let prompt = `You are an elite MMA Contextual Analyst using the "Master the Weapons" system.\n\n`;
-    
-    prompt += (nameB) ? 
-        `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n**Fighter B:** ${nameB}\n\n` : 
-        `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\n`;
-
-    prompt += `Score every category from 0-10 based on the fight videos and known fighter context.\n\n`;
-    prompt += `Return ONLY the CSV in this exact format (no extra text, no explanations):\n\n`;
-    prompt += `Category,A_Score,B_Score\n`;
-    prompt += `Aero-Cardio,X,X\n`;
-    prompt += `Durability/Chin,X,X\n`;
-    prompt += `Psychology/Momentum,X,X\n`;
-    prompt += `Geography/Spot,X,X\n`;
-    prompt += `Corner/Technical Plan,X,X\n`;
-    prompt += `Physical Delta,X,X\n`;
-    prompt += `OTC Form Trend (Outside-the-Cage),X,X\n\n`;
-
-    prompt += `### IMPORTANT SCORING GUIDELINE FOR OTC FORM TREND (Be strict and realistic):\n`;
-    prompt += `OTC Form Trend (Outside-the-Cage) evaluates real-life factors in the 4–8 weeks before the fight that can affect performance.\n`;
-    prompt += `Consider: family/personal problems, financial stress, coaching camp stability or drama, training consistency, legal/regulatory issues, motivation level, contract situations, media/social media distractions, recent win/loss streak momentum, or any public camp noise.\n\n`;
-    prompt += `Scoring (Be critical):\n`;
-    prompt += `10 = Perfect, drama-free camp, peak focus and motivation\n`;
-    prompt += `9   = Excellent camp, only tiny distractions\n`;
-    prompt += `8   = Solid professional camp\n`;
-    prompt += `7   = Average with some minor issues\n`;
-    prompt += `6   = Noticeable problems or inconsistency in recent performances\n`;
-    prompt += `5   = Clear camp issues affecting preparation or focus\n`;
-    prompt += `1-4 = Major red flags (chaos, major drama, poor motivation, etc.)\n`;
-
-    document.getElementById('promptDisplay').textContent = prompt;
-}
-    
+        document.getElementById('promptDisplay').textContent = prompt;
+    }
 
     function copyPrompt() {
-        navigator.clipboard.writeText(document.getElementById('promptDisplay').textContent);
-        alert("✅ Copied!");
+        const text = document.getElementById('promptDisplay').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("✅ Copied to clipboard!");
+        });
     }
 
     function saveWeaponsScores() {
         const scores = document.getElementById('aiScores').value.trim();
-        if (scores) { localStorage.setItem('MOW_AI_Scores', scores); alert("✅ Saved Weapons!"); }
+        if (scores) {
+            localStorage.setItem(KEYS.aiScores, scores);
+            alert("✅ Weapons Scores Saved!");
+        }
     }
 
     function saveXFactorScores() {
         const scores = document.getElementById('xfScores').value.trim();
-        if (scores) { localStorage.setItem('MOW_XFactor_Scores', scores); alert("✅ Saved X-Factor!"); }
+        if (scores) {
+            localStorage.setItem(KEYS.xfScores, scores);
+            alert("✅ X-Factor Scores Saved!");
+        }
     }
 
     function clearAll() {
-        if (confirm("Clear ALL data?")) {
-            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
-            document.getElementById('promptDisplay').textContent = 'Fill details and click Generate...';
-            localStorage.clear();
-            alert("✅ Cleared!");
+        if (!confirm("Clear ALL data? This will remove fighter names, video links, and saved scores.")) {
+            return;
         }
+
+        // Only remove keys used by this app (safe!)
+        Object.values(KEYS).forEach(key => {
+            localStorage.removeItem(key);
+        });
+
+        // Reset form fields
+        document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+        document.getElementById('promptDisplay').textContent = 'All data cleared. Ready for new setup...';
+
+        alert("✅ All data cleared safely!");
     }
+
+    // Auto-load saved data when page opens
+    window.onload = loadSavedData;
 </script>
 </body>
 </html>
