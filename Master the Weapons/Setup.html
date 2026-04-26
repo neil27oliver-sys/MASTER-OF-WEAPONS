@@ -291,43 +291,49 @@
     }
 
     function generateXFactorPrompt() {
-        saveSettings();
-        // ... (your existing generateXFactorPrompt code remains unchanged)
-        const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
-        const nameB = document.getElementById('fB_name').value.trim();
+    saveSettings();
+    const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
+    const nameB = document.getElementById('fB_name').value.trim();
 
-        let prompt = `You are an elite MMA Contextual Analyst using the "Master the Weapons" system.\n\n`;
-        
-        prompt += (nameB) ? 
-            `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n**Fighter B:** ${nameB}\n\n` : 
-            `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\n`;
+    let prompt = `You are an elite MMA Contextual Analyst using the "Master the Weapons" system.\n\n`;
+    
+    prompt += (nameB) ? 
+        `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n**Fighter B:** ${nameB}\n\n` : 
+        `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\n`;
 
-        prompt += `Score every category from 0-10 based on the fight videos and known fighter context.\n\n`;
-        prompt += `Return ONLY the CSV in this exact format (no extra text, no explanations):\n\n`;
-        prompt += `Category,A_Score,B_Score\n`;
-        prompt += `Aero-Cardio,X,X\n`;
-        prompt += `Durability/Chin,X,X\n`;
-        prompt += `Psychology/Momentum,X,X\n`;
-        prompt += `Geography/Spot,X,X\n`;
-        prompt += `Corner/Technical Plan,X,X\n`;
-        prompt += `Physical Delta,X,X\n`;
-        prompt += `OTC Form Trend (Outside-the-Cage),X,X\n\n`;
+    prompt += `Score every category from 0-10 based on the fight videos (where available), actual fight output/stats, and known fighter context. Prioritize how these factors realistically impact performance against this specific opponent in a 5-round main event.\n\n`;
+    prompt += `Return ONLY the CSV in this exact format (no extra text, no explanations):\n\n`;
+    prompt += `Category,A_Score,B_Score\n`;
+    prompt += `Aero-Cardio,X,X\n`;
+    prompt += `Durability/Chin,X,X\n`;
+    prompt += `Psychology/Momentum,X,X\n`;
+    prompt += `Geography/Spot,X,X\n`;
+    prompt += `Corner/Technical Plan,X,X\n`;
+    prompt += `Physical Delta,X,X\n`;
+    prompt += `OTC Form Trend (Outside-the-Cage),X,X\n\n`;
 
-        prompt += `### IMPORTANT SCORING GUIDELINE FOR OTC FORM TREND (Be strict and realistic):\n`;
-        prompt += `OTC Form Trend (Outside-the-Cage) evaluates real-life factors in the 4–8 weeks before the fight that can affect performance.\n`;
-        prompt += `Consider: family/personal problems, financial stress, coaching camp stability or drama, training consistency, legal/regulatory issues, motivation level, contract situations, media/social media distractions, recent win/loss streak momentum, or any public camp noise.\n\n`;
-        prompt += `Scoring (Be critical):\n`;
-        prompt += `10 = Perfect, drama-free camp, peak focus and motivation\n`;
-        prompt += `9   = Excellent camp, only tiny distractions\n`;
-        prompt += `8   = Solid professional camp\n`;
-        prompt += `7   = Average with some minor issues\n`;
-        prompt += `6   = Noticeable problems or inconsistency in recent performances\n`;
-        prompt += `5   = Clear camp issues affecting preparation or focus\n`;
-        prompt += `1-4 = Major red flags (chaos, major drama, poor motivation, etc.)\n`;
+    prompt += `### IMPORTANT SCORING GUIDELINES (Apply Strictly):\n`;
+    prompt += `**General Rules:**\n`;
+    prompt += `* Be realistic and outcome-oriented. Favor proven execution in high-stakes/grappling-heavy matchups over raw "upside".\n`;
+    prompt += `* Veteran experience edge: Give clear credit for deep history in 5-round fights and title-level pressure.\n`;
+    prompt += `* Momentum quality: Discount streaks against mixed or declining opposition. Reward consistency against elite competition.\n\n`;
 
-        document.getElementById('promptDisplay').textContent = prompt;
-    }
+    prompt += `**OTC Form Trend (Outside-the-Cage) - Be very critical and realistic:**\n`;
+    prompt += `Evaluate real-life factors in the 4–8 weeks before the fight: family/personal problems, financial stress, coaching stability, legal issues, motivation, contract situations, media distractions, and quality of recent camp noise.\n\n`;
+    
+    prompt += `**Scoring (Be strict):**\n`;
+    prompt += `10 = Perfect, drama-free camp, peak focus/motivation.\n`;
+    prompt += `9  = Excellent camp, only tiny distractions.\n`;
+    prompt += `8  = Solid professional camp with strong consistency.\n`;
+    prompt += `7  = Average with minor issues or typical veteran wear.\n`;
+    prompt += `6  = Noticeable problems, inconsistency, or quality questions in recent performances.\n`;
+    prompt += `5  = Clear camp issues affecting preparation or focus.\n`;
+    prompt += `1-4 = Major red flags (chaos, drama, poor motivation, instability).\n\n`;
+    
+    prompt += `*Note: In veteran vs. streaking prospect matchups, do not automatically award high OTC scores to the prospect solely for a win streak. Penalize if the streak lacks elite opposition quality.*`;
 
+    document.getElementById('promptDisplay').textContent = prompt;
+}
     function copyPrompt() {
         const text = document.getElementById('promptDisplay').textContent;
         navigator.clipboard.writeText(text).then(() => {
