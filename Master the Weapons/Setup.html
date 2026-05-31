@@ -290,7 +290,7 @@
         document.getElementById('promptDisplay').textContent = prompt;
     }
 
-    function generateXFactorPrompt() {
+function generateXFactorPrompt() {
     saveSettings();
     const nameA = document.getElementById('fA_name').value.trim() || 'Fighter A';
     const nameB = document.getElementById('fB_name').value.trim();
@@ -317,6 +317,13 @@
     prompt += `* Be realistic and outcome-oriented. Favor proven execution in high-stakes/grappling-heavy matchups over raw "upside".\n`;
     prompt += `* Veteran experience edge: Give clear credit for deep history in 5-round fights and title-level pressure.\n`;
     prompt += `* Momentum quality: Discount streaks against mixed or declining opposition. Reward consistency against elite competition.\n\n`;
+
+    // === NEW AGE GUIDELINES ===
+    prompt += `**Age & Physical Prime Guidelines (Very Important):**\n`;
+    prompt += `* Prime Age Window: 26-33 years old.\n`;
+    prompt += `* Fighters 34-35: Start applying mild decline (Physical Delta, Aero-Cardio, recovery).\n`;
+    prompt += `* Fighters 36+: Clear past-prime penalties — reduce Physical Delta, Aero-Cardio, and late-fight output significantly.\n`;
+    prompt += `* The bigger the age gap, the more it should influence Physical Delta and 5-round performance.\n\n`;
 
     prompt += `**OTC Form Trend (Outside-the-Cage) - Be very critical and realistic:**\n`;
     prompt += `Evaluate real-life factors in the 4–8 weeks before the fight: family/personal problems, financial stress, coaching stability, legal issues, motivation, contract situations, media distractions, and quality of recent camp noise.\n\n`;
