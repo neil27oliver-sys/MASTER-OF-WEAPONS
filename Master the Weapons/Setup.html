@@ -253,22 +253,23 @@
             if (vB2) prompt += `Video 2 (Skill Set): ${vB2}\n`;
         }
 
-        prompt += `\nWatch both videos carefully and score each weapon realistically based on actual fight output, not reputation or potential.\n\n`;
-        prompt += `Score 0-10 across 3 dimensions:\n`;
-        prompt += `- T (Timing): Setup, timing, and entry precision\n`;
-        prompt += `- A (Adaptability): Ability to adjust mid-fight\n`;
-        prompt += `- E (Effectiveness/Damage): Real success rate, damage caused, control gained, and fight impact. Be strict.\n\n`;
+        prompt += `Watch the fight footage carefully and score each weapon realistically based on **actual fight output** in this specific matchup, not reputation or potential.\n\n`
 
-        prompt += `**Critical Scoring Rules (Very Important):**\n`;
-        prompt += `- Prioritize actual output and fight impact over volume or flashy attempts.\n`;
-        prompt += `- Sprawl (Defense): Heavily reward consistent takedown defense and immediate get-ups.\n`;
-        prompt += `- Ground-and-Pound: Reward real damage inflicted, not just position.\n`;
-        prompt += `- Submissions: Reward actual threat and finishing ability, not just entries.\n`;
-        prompt += `- Striking: Reward cleaner, more damaging shots (especially leg kicks that visibly hurt opponent).\n`;
-        prompt += `- Control time and positional dominance matter for clinch, guard pass, mount, etc.\n\n`;
+prompt += `Score 0-10 across 3 dimensions for each weapon:\n`
+prompt += `- T (Timing): Setup, entry timing, and precision\n`
+prompt += `- A (Adaptability): Mid-fight adjustments and counters\n`
+prompt += `- E (Effectiveness/Damage): Real success rate, damage inflicted, control gained, and overall fight impact. Be strict.\n\n`
 
-        prompt += `Return ONLY the scores in CSV format (no extra text, no explanations):\n\n`;
-        prompt += `Weapon,A_T,A_A,A_E,B_T,B_A,B_E\n`;
+prompt += `**Critical Scoring Rules (Apply Strictly):**\n`
+prompt += `- Prioritize actual output and visible fight impact over volume or flashy attempts.\n`
+prompt += `- Sprawl/Takedown Defense: Heavily reward consistent defense and quick get-ups.\n`
+prompt += `- Ground-and-Pound: Reward real damage caused, not just top position.\n`
+prompt += `- Submissions: Reward actual threat and finishing potential, not just entries.\n`
+prompt += `- Striking: Reward cleaner, more damaging shots (especially leg kicks that visibly affected the opponent).\n`
+prompt += `- Control time and positional dominance matter heavily in clinch, guard, mount, and side control.\n\n`
+
+prompt += `Return ONLY the scores in CSV format (no extra text, no explanations):\n\n`
+prompt += `Weapon,A_T,A_A,A_E,B_T,B_A,B_E\n`
         prompt += `Jab/Cross,X,X,X,X,X,X\n`;
         prompt += `Roundhouse Kick,X,X,X,X,X,X\n`;
         prompt += `Teep (Push Kick),X,X,X,X,X,X\n`;
@@ -301,44 +302,36 @@ function generateXFactorPrompt() {
         `**FIGHT COMPARISON MODE**\n**Fighter A:** ${nameA}\n**Fighter B:** ${nameB}\n\n` : 
         `**SELF-ASSESSMENT MODE**\n**Fighter:** ${nameA}\n\n`;
 
-    prompt += `Score every category from 0-10 based on the fight videos (where available), actual fight output/stats, and known fighter context. Prioritize how these factors realistically impact performance against this specific opponent in a 5-round main event.\n\n`;
-    prompt += `Return ONLY the CSV in this exact format (no extra text, no explanations):\n\n`;
-    prompt += `Category,A_Score,B_Score\n`;
-    prompt += `Aero-Cardio,X,X\n`;
-    prompt += `Durability/Chin,X,X\n`;
-    prompt += `Psychology/Momentum,X,X\n`;
-    prompt += `Geography/Spot,X,X\n`;
-    prompt += `Corner/Technical Plan,X,X\n`;
-    prompt += `Physical Delta,X,X\n`;
-    prompt += `OTC Form Trend (Outside-the-Cage),X,X\n\n`;
+    prompt += `Score every category from 0-10 based on realistic expected performance in a 5-round main event against this specific opponent.\n\n`
 
-    prompt += `### IMPORTANT SCORING GUIDELINES (Apply Strictly):\n`;
-    prompt += `**General Rules:**\n`;
-    prompt += `* Be realistic and outcome-oriented. Favor proven execution in high-stakes/grappling-heavy matchups over raw "upside".\n`;
-    prompt += `* Veteran experience edge: Give clear credit for deep history in 5-round fights and title-level pressure.\n`;
-    prompt += `* Momentum quality: Discount streaks against mixed or declining opposition. Reward consistency against elite competition.\n\n`;
+prompt += `Return ONLY the CSV in this exact format (no extra text, no explanations):\n\n`
+prompt += `Category,A_Score,B_Score\n`
+prompt += `Aero-Cardio,X,X\n`
+prompt += `Durability/Chin,X,X\n`
+prompt += `Psychology/Momentum,X,X\n`
+prompt += `Fight IQ / Game Plan,X,X\n`          
+prompt += `Corner/Technical Plan,X,X\n`
+prompt += `Physical Delta (Size, Strength, Reach),X,X\n`
+prompt += `OTC Form Trend (Outside-the-Cage),X,X\n\n`
 
-    // === NEW AGE GUIDELINES ===
-    prompt += `**Age & Physical Prime Guidelines (Very Important):**\n`;
-    prompt += `* Prime Age Window: 26-33 years old.\n`;
-    prompt += `* Fighters 34-35: Start applying mild decline (Physical Delta, Aero-Cardio, recovery).\n`;
-    prompt += `* Fighters 36+: Clear past-prime penalties — reduce Physical Delta, Aero-Cardio, and late-fight output significantly.\n`;
-    prompt += `* The bigger the age gap, the more it should influence Physical Delta and 5-round performance.\n\n`;
+prompt += `### IMPORTANT SCORING GUIDELINES (Apply Strictly):\n`
+prompt += `**General Rules:**\n`
+prompt += `- Be outcome-oriented and realistic. Favor proven execution over raw potential.\n`
+prompt += `- Veteran experience in 5-round fights gets clear credit under pressure.\n`
+prompt += `- Discount win streaks against weak opposition.\n\n`
 
-    prompt += `**OTC Form Trend (Outside-the-Cage) - Be very critical and realistic:**\n`;
-    prompt += `Evaluate real-life factors in the 4–8 weeks before the fight: family/personal problems, financial stress, coaching stability, legal issues, motivation, contract situations, media distractions, and quality of recent camp noise.\n\n`;
-    
-    prompt += `**Scoring (Be strict):**\n`;
-    prompt += `10 = Perfect, drama-free camp, peak focus/motivation.\n`;
-    prompt += `9  = Excellent camp, only tiny distractions.\n`;
-    prompt += `8  = Solid professional camp with strong consistency.\n`;
-    prompt += `7  = Average with minor issues or typical veteran wear.\n`;
-    prompt += `6  = Noticeable problems, inconsistency, or quality questions in recent performances.\n`;
-    prompt += `5  = Clear camp issues affecting preparation or focus.\n`;
-    prompt += `1-4 = Major red flags (chaos, drama, poor motivation, instability).\n\n`;
-    
-    prompt += `*Note: In veteran vs. streaking prospect matchups, do not automatically award high OTC scores to the prospect solely for a win streak. Penalize if the streak lacks elite opposition quality.*`;
+prompt += `**Age & Physical Prime Guidelines:**\n`
+prompt += `- Prime window: 26-33 years old\n`
+prompt += `- 34-35: Mild decline in Physical Delta, Cardio, and recovery\n`
+prompt += `- 36+: Clear penalties in late-round output and Physical Delta\n`
+prompt += `- Bigger age gaps should significantly influence scoring.\n\n`
 
+prompt += `**OTC Form Trend (Very Critical):** Evaluate real-life factors in the 4–8 weeks before the fight (family issues, financial stress, coaching changes, legal problems, motivation, contract drama, media distractions, camp quality).\n`
+prompt += `10 = Perfect, drama-free peak camp\n`
+prompt += `9  = Excellent with minimal issues\n`
+prompt += `7-8 = Solid but typical veteran wear\n`
+prompt += `5-6 = Noticeable problems or inconsistency\n`
+prompt += `1-4 = Major red flags affecting performance\n`
     document.getElementById('promptDisplay').textContent = prompt;
 }
     function copyPrompt() {
